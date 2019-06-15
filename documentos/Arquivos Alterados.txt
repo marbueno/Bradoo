@@ -1,0 +1,17 @@
+site
+	templates/index.html
+	templates/products/*.*
+	templates/images/*.*
+
+	static/js/produtos.js
+	static/js/images.js
+
+api
+	produto.py
+	imagem.py
+
+css
+	sb-admin-2.min.css
+
+js
+	datables-demo.js

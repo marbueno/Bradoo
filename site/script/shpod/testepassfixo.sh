@@ -1,0 +1,1 @@
+python3 /script.py -d testepassfixo -l admin -pw admin  -nu testepassfixo -nl testepassfixo -npw testepassfixo -cnpj 27160869000150 -sh 18.219.48.129 -su testepassfixo -sp PbE40qQJUuzMvt -sw 25 -se none  -ih 18.219.48.129 -iu testepassfixo  -ip PbE40qQJUuzMvt  -it pop -iw 587 -ie none  --host http://localhost:8069

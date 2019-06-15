@@ -1,0 +1,1 @@
+python3 /script.py -d  -l admin -apw  -pw  admin  -nu  -nl  -npw  -cnpj 27160869000150 -sh 18.219.48.129 -su  -sp ZE0fD5gzqa2QTc -sw 25 -se none  -ih 18.219.48.129 -iu   -ip ZE0fD5gzqa2QTc  -it pop -iw 587 -ie none  --host http://localhost:8069

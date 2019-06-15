@@ -1,0 +1,1 @@
+python3 /script.py -d daniel -l admin -apw daniel -pw  admin  -nu daniel -nl daniel -npw daniel -cnpj 27160869000150 -sh 3.14.99.83 -su daniel -sp lnWTkA8SZBlEJt -sw 25 -se none  -ih 3.14.99.83 -iu daniel  -ip lnWTkA8SZBlEJt  -it imap -iw 993 -ie True  --host http://localhost:8069

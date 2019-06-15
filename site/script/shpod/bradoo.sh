@@ -1,0 +1,1 @@
+python3 /script.py -d bradoo -l admin -apw bradoo -pw  admin  -nu bradoo -nl bradoo -npw bradoo -cnpj 27160869000150 -sh 3.14.99.83 -su bradoo -sp XYuoVUdFdrIK4E -sw 25 -se none  -ih 3.14.99.83 -iu bradoo  -ip XYuoVUdFdrIK4E  -it imap -iw 993 -ie True  --host http://localhost:8069

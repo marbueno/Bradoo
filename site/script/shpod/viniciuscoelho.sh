@@ -1,0 +1,1 @@
+python3 /script.py -d viniciuscoelho -l admin -pw Ug0QUPsjRaLPij -nu viniciuscoelho -nl Ug0QUPsjRaLPij -npw oURJSjKuLMN7H4 -cnpj 27160869000 -sh 18.219.48.129 -su viniciuscoelho -sp vFOfFEb3txgxsa -sw 25 -se none  -ih 18.219.48.129 -iu viniciuscoelho  -ip vFOfFEb3txgxsa  -it pop -iw 587 -ie none  --host http://localhost:8069

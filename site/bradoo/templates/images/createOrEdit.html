@@ -1,0 +1,42 @@
+{% load bootstrap %}
+<div class="modal fade" id="registerimage" tabindex="-1" role="dialog" aria-labelledby="registerimageLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="registerimageLabel">Registro de Imagem</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="registry-images">
+                    <div class="form-group">
+                        <label>Produto</label>
+                            <select class="form-control" name="product" id="product">
+                            <option value="None" selected="selected">None</option>
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.product }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    {{ form|bootstrap }}
+                    <div class="form-group">
+                    <label>Tipo de Banco de Dados</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="typedb" id="radDemo" value="demo">
+                      <label class="form-check-label" for="radDemo">Demo</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="typedb" id="radLimpo" value="limpo">
+                      <label class="form-check-label" for="radLimpo">Limpo</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary button">Salvar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

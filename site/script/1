@@ -1,0 +1,47 @@
+#!/bin/bash
+
+IP='157.230.215.120'
+
+#Nome="teste-odoo"
+#Image_registry= "docker.io"
+#Image_Name="bitnami/odoo"
+#Image_Tag="11.0.20190315"
+echo "Gerando Credenciais"
+Password_odoo=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
+DB_PASSWORD=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
+SMTP_PASSWORD=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
+PW_ADMIN=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
+DB_PORT='5432'
+DB_ADDR='67.205.136.63'
+
+
+echo "Efetuado criação do banco"
+
+sudo ssh root@67.205.136.63 sudo /opt/create-database.sh $name $name $DB_PASSWORD
+
+echo "Efetuado criação de filestore"
+
+sudo ssh root@134.209.214.131 cp -R /var/nfsshare/template/ /var/nfsshare/filestore/$name
+sudo ssh root@134.209.214.131 chown -R odoo:odoo /var/nfsshare/filestore/$name
+
+echo "Efetuado criação do container"
+
+helm install --name $name /opt/bradoo-chart/ --set image.registry=$url_image,image.repository=$image_name,image.tag=$image_tag,DB_ADDR=$DB_ADDR,DB_NAME=$name,DB_PORT=$DB_PORT,DB_USER=$name,DB_PASSWORD=$DB_PASSWORD
+#helm install --name $name /opt/bradoo-chart/ --set image.registry=$url_image,image.repository=$image_name,image.tag=$image_tag,DB_ADDR=$DB_ADDR,DB_NAME=$name,DB_PORT=$DB_PORT,DB_USER=$name,DB_PASSWORD=$DB_PASSWORD,script.d=$name,script.pw=$PW_ADMIN,script.nu=$name,script.nl=$name,script.npw=$Password_odoo,script.su=$name,script.sp=SMTP_PASSWORD,smtp.iu=$name,smtp.ip=SMTP_PASSWORD
+
+
+PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services $name)
+
+echo "Esperando status Running"
+/op/podname.sh vinicius121 |awk '{ print $3}' | sed -n 3p
+
+echo "Registrando SMTP"
+sudo ssh centos@18.219.48.129 sudo /root/py/create.py $name $SMTP_PASSWORD $IP $PORT
+
+#sudo ssh root@67.205.136.63 sudo /opt/define_admin.sh $name 
+
+echo "usuario: " $name 
+echo "Container brodoo criado no ip" $IP":"$PORT
+echo "DNS: "$name".bradoo.tk"
+echo "Senha do Banco: " $DB_PASSWORD
+

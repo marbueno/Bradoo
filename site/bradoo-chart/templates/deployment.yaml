@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "bradoo.fullname" . }}
+  labels:
+    app: {{ template "bradoo.name" . }}
+    chart: {{ template "bradoo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "bradoo.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ template "bradoo.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{  template "bradoo.fullname" . }}
+          image: {{  template "bradoo.image" .  }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          env:
+          {{- if .Values.DB_NAME }}
+          - name: DB_NAME
+            value: {{ .Values.DB_NAME | quote }}
+          {{- end }}
+          {{- if .Values.DB_ADDR }}
+          - name: DB_PORT_5432_TCP_ADDR
+            value: {{ .Values.DB_ADDR | quote }} 
+          {{- end  }}
+          {{- if .Values.DB_PORT }} 
+          - name: DB_PORT_5432_TCP_PORT
+            value: {{ .Values.DB_PORT | quote }}
+          {{- end }}
+          {{- if .Values.DB_USER }}
+          - name: DB_ENV_POSTGRES_USER
+            value: {{ .Values.DB_USER | quote }} 
+          {{- end }}
+          {{- if .Values.DB_PASSWORD }}
+          - name: DB_ENV_POSTGRES_PASSWORD
+            value: {{ .Values.DB_PASSWORD | quote }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8069
+          volumeMounts:
+            - name: filestore
+              mountPath: /var/lib/odoo/filestore/
+      volumes:
+        - name: filestore
+          persistentVolumeClaim:
+            claimName: nfs-pvc
+      imagePullSecrets:
+        - name: regcred 
+

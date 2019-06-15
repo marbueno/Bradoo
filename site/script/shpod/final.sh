@@ -1,0 +1,1 @@
+python3 /script.py -d final -l admin -pw zIhoCr8kEEXrbI -nu final -nl zIhoCr8kEEXrbI -npw w8Y6K1fwSeOJFr -cnpj 27160869000 -sh 18.219.48.129 -su final -sp bwYGUmpQYYLjBc -sw 25 -se none  -ih 18.219.48.129 -iu final  -ip bwYGUmpQYYLjBc  -it pop -iw 587 -ie none  --host http://localhost:8069

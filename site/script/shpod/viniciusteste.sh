@@ -1,0 +1,1 @@
+python3 /script.py -d viniciusteste -l admin -apw viniciusteste -pw  admin  -nu viniciusteste -nl viniciusteste -npw viniciusteste -cnpj 27160869000150 -sh 3.14.99.83 -su viniciusteste -sp OhPD5FS2eedmkR -sw 25 -se none  -ih 3.14.99.83 -iu viniciusteste  -ip OhPD5FS2eedmkR  -it imap -iw 993 -ie True  --host http://localhost:8069

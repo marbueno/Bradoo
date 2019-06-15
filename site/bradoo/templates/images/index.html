@@ -1,0 +1,75 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load bootstrap %}
+{% block head %}
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block  body %}
+
+<div class="container">
+<div class="containLller-fluid">
+        <!-- Page Heading -->
+<a href="#" type="button" class="btn btn-primary btn-icon-split" data-toggle="modal" onclick="resetFields()" data-target="#registerimage">
+    <span class="icon text-white-50">
+        <i class="fas fa-plus "></i>
+    </span>
+    <span class="text">Adicionar</span>
+</a>
+<!-- <a href="#" class="btn btn-warning btn-icon-split" data-toggle="modal" data-target="#imageUpdate">
+    <span class="icon text-white-50">
+        <i class="fa fa-spinner" aria-hidden="true"></i>
+    </span>
+    <span class="text">Atualizar</span>
+</a> -->
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Lista de Imagens</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <input id="imageId" name="imageId" type="hidden" >
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>TAG</th>
+                  <th>Nome</th>
+                  <th>URL</th>
+                  <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for image in images %}
+                <tr>
+                  <td>{{ image.product_name }}</td>
+                  <td>{{ image.image_name }}</td>
+                  <td>{{ image.image_tag }}</td>
+                  <td>{{ image.url_image }}</td>
+                  <td class="acoes">
+                      <div class="row">
+                        <form id="rm-image-{{ image.id }}">
+                            <input name="image" value="{{ image.id }}" type="hidden">
+                            <button class="btn" id="rm-image-btn"><i class="fa fa-trash"></i></button>
+                        </form>
+                        <button class="btn" id="" data-toggle="modal" data-target="#registerimage" onclick="setValuesFields('{{ image.id }}', '{{ image.product }}', '{{ image.url_image }}', '{{ image.image_name }}', '{{ image.image_tag }}', '{{ image.typedb }}')"><i class="fa fa-edit"></i></button>
+                    </div>
+                  </td>
+                      
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+{% block scripts %}
+    <script src="{% static 'js/images.js' %}"></script>
+{% endblock %}
+{% include 'images/createOrEdit.html' %}
+
+{% endblock %}

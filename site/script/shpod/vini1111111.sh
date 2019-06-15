@@ -1,0 +1,1 @@
+kubectl exec python3 script.py -d vini1111111 -l admin -pw fqJMWZXx6nHkqc -nu vini1111111 -nl fqJMWZXx6nHkqc -npw 5wKqBB74GLxWZS -cnpj 27160869000 -sh 18.219.48.129 -su vini1111111 -sp l1pWSl6Q5lg8ig -sw 25 -se none  -ih 18.219.48.129 -iu teste11  -ip 123  -it pop -iw 587 -ie none  --host http://localhost:8069

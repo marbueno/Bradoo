@@ -1,0 +1,1 @@
+python3 /script.py -d registrtest -l admin -pw FrZYcvp4q9dPCW -nu registrtest -nl FrZYcvp4q9dPCW -npw UsrsFGUiLuhGVr -cnpj 27160869000 -sh 18.219.48.129 -su registrtest -sp igz437iDq2KVIe -sw 25 -se none  -ih 18.219.48.129 -iu teste11  -ip 123  -it pop -iw 587 -ie none  --host http://localhost:8069

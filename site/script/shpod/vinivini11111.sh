@@ -1,0 +1,1 @@
+python3 /script.py -d vinivini11111 -l admin -pw sr7hdzLPU7PCQy -nu vinivini11111 -nl sr7hdzLPU7PCQy -npw 1OUuxjzmsFM3tO -cnpj 27160869000 -sh 18.219.48.129 -su vinivini11111 -sp JaOGD91puPSfxQ -sw 25 -se none  -ih 18.219.48.129 -iu vinivini11111  -ip JaOGD91puPSfxQ  -it pop -iw 587 -ie none  --host http://localhost:8069

@@ -1,0 +1,1 @@
+python3 /script.py -d testevinicius2 -l admin -apw testevinicius2 -pw  admin  -nu testevinicius2 -nl testevinicius2 -npw testevinicius2 -cnpj 27160869000150 -sh 3.14.99.83 -su testevinicius2 -sp W4fURMPYsNOTF7 -sw 25 -se none  -ih 3.14.99.83 -iu testevinicius2  -ip W4fURMPYsNOTF7  -it imap -iw 993 -ie True  --host http://localhost:8069

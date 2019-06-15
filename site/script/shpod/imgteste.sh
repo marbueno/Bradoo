@@ -1,0 +1,1 @@
+python3 /script.py -d imgteste -l admin -pw mB9xLFxbMoQfYC -nu imgteste -nl mB9xLFxbMoQfYC -npw V7Anpmx1dmYFAM -cnpj 27160869000 -sh 18.219.48.129 -su imgteste -sp RmXhXNUKkLm2y7 -sw 25 -se none  -ih 18.219.48.129 -iu imgteste  -ip RmXhXNUKkLm2y7  -it pop -iw 587 -ie none  --host http://localhost:8069

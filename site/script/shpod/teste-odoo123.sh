@@ -1,0 +1,1 @@
+kubectl exec python3 script.py -d teste-odoo123 -l admin -pw VRJLk0jqEXYLty -nu teste-odoo123 -nl VRJLk0jqEXYLty -npw gCV6TsOLNWD297 -cnpj 27160869000 -sh 18.219.48.129 -su teste-odoo123 -sp jOns6Oppxi3U80 -sw 25 -se none  -ih 18.219.48.129 -iu teste11  -ip 123  -it pop -iw 587 -ie none  --host http://localhost:8069

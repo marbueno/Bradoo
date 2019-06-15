@@ -1,0 +1,1 @@
+python3 /script.py -d testegabriel -l admin -pw 0J0QgWdfBVXj8j -nu testegabriel -nl 0J0QgWdfBVXj8j -npw jBomUjk9DFKAaB -cnpj 27160869000 -sh 18.219.48.129 -su testegabriel -sp D6UVOxcdVJftXc -sw 25 -se none  -ih 18.219.48.129 -iu testegabriel  -ip D6UVOxcdVJftXc  -it pop -iw 587 -ie none  --host http://localhost:8069
