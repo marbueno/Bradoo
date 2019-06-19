@@ -5,13 +5,41 @@ site
 
 	static/js/produtos.js
 	static/js/images.js
+---------------------------------
+8 horas
 
+
+
+---------------------------------
 api
 	produto.py
 	imagem.py
+---------------------------------
+8 horas
 
+
+
+---------------------------------
 css
 	sb-admin-2.min.css
 
 js
 	datables-demo.js
+---------------------------------
+4 horas
+---------------------------------
+
+
+
+
+
+Página de Instâncias
+---------------------------------
+- Entendimento da funcionalidade da tela
+- Teste de Tentativa e Erro para identificar o problema dos registros que não estavam aparecendo.
+Os mesmos não apareciam devido aos META NAME vindo do Kubernetes não estarem confrontando com o que 
+existe na Base de Dados
+- Ajuste no código temporário para que aparecesse os dados somente do Banco de Dados sem o cruzamento 
+dos dados do Kubernetes
+---------------------------------
+15 horas

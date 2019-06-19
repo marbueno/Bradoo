@@ -22,6 +22,14 @@
     <span class="text">Ultimo Log</span>
 </a>
 
+    <!-- <hr />
+
+    Log: {{ log }}
+
+    <hr /> -->
+
+    <!-- {{ deployments }} -->
+
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -43,7 +51,7 @@
                 <tbody>
                 {% for deployment in deployments %}
                 <tr>
-                    <td>{{ deployment.product }}</td>
+                    <td>{{ deployment.product_name }}</td>
                     <td>{{ deployment.image_tag }}</td>
                     <td>{{ deployment.name }}</td>
                     <td></td>
@@ -52,7 +60,7 @@
 
                     <div class="row">
                     &emsp;
-                    <label class="switch">
+                    <label class="switch" style="margin-top: 10px;">
                     <input {% if deployment.replicas %}checked{% endif %} type="checkbox" id="switch-{{ deployment.name }}" value="{{ deployment.name }}@@{{ deployment.namespace }}@@{{ deployment.replicas }}">
                     <span class="slider round"></span>
                     </label>

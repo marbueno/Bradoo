@@ -1,5 +1,6 @@
 $("#createbuild").submit(function (event) {
     event.preventDefault();
+    debugger;
     var data = $( this ).serializeArray();
     var url = 'http://18.219.63.233:5000/build/';
     $.ajax({
@@ -8,12 +9,19 @@ $("#createbuild").submit(function (event) {
         data :  JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
         datatype: "json",
-        success:function () {
+        success:function (data, textStatus, XmlHttpRequest) {
+            console.log(data);
+            console.log(textStatus);
+            console.log(XmlHttpRequest);
             $('#createJob').modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
         },
-        error:function () {
+        error:function (XMLHttpRequest, textStatus, errorThrown) {
+
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
             $('#createJob').modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();

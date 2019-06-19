@@ -44,7 +44,6 @@ def last_build():
     """
     try:
         con_j = connect_jenkins()
-        print (con_j)
         number = con_j.get_job_info('Deploy_Odoo')['lastCompletedBuild']['number']
         info = con_j.get_build_console_output('Deploy_Odoo', number)
         return info
@@ -86,4 +85,4 @@ def log_pod():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5000, host='127.0.0.1')
+    app.run(debug=False, port=5000, host='0.0.0.0')

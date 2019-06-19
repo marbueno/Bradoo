@@ -14,7 +14,7 @@ db = con['bradoo']
 
 config.load_kube_config()
 def connect_jenkins():
-    con = jenkins('http://18.219.63.233:8080/', username='vitorlavor', password='1149e0e4346bb060c9b277d6294080fdc4')
+    con = Jenkins('http://18.219.63.233:8080/', username='vitorlavor', password='1149e0e4346bb060c9b277d6294080fdc4')
     return con
 
 # create blueprint
@@ -63,6 +63,13 @@ def consult_build(job_name=None):
         if job:
             result = db.builds.find_one({"name": job_name})
             result['_id'] = str(result['_id'])
+
+            if result["product"] != "None":
+                dataProduct = db.products.find_one({"_id": ObjectId(result["product"])})
+
+                if dataProduct:
+                    result["product_name"] = str(dataProduct["product"])
+
             return jsonify(result), 200
         else:
             return jsonify({"status": "job não localizado"}), 204
@@ -70,6 +77,12 @@ def consult_build(job_name=None):
         jobs = list(db.builds.find())
         for job in jobs:
             job['_id'] = str(job['_id'])
+
+            if job["product"] != "None":
+                dataProduct = db.products.find_one({"_id": ObjectId(job["product"])})
+                if dataProduct:
+                    job["product_name"] = str(dataProduct["product"])
+
         return jsonify(jobs), 200
 
 
@@ -92,9 +105,11 @@ def register_build():
 
         # Registra build no banco de dados
         data['date_update'] = [datetime.now()]
+        
         db.builds.insert(data)
         return jsonify({"status": True}), 200
     except Exception as ex:
+        print (ex)
         return jsonify({"status": False}), 400
 
 

@@ -50,7 +50,10 @@ def list_image(id=None):
 
             if x["product"] != "None":
                 dataProduct = db.products.find_one({"_id": ObjectId(x["product"])})
-                x["product_name"] = str(dataProduct["product"])
+
+                if dataProduct:
+                    x["product_name"] = str(dataProduct["product"])
+
         return jsonify(data)
 
 @image.route("<string:id>/", methods=["DELETE"])
