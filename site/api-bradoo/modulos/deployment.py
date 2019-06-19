@@ -6,6 +6,7 @@ from datetime import datetime
 
 from bson import ObjectId
 from .worker import *
+import os
 
 
 # Connect mongodb
@@ -99,19 +100,26 @@ def register_build():
         data['url_image'] = data.pop("url_imageu")
         data['image_name'] = data.pop("image_nameu")
 
+        print ('BUILD em Andamento')
+
         # Executa o build de create no jenkins
         con_j = connect_jenkins()
+
+        build_id = con_j.get_job_info('Deploy_Odoo')['nextBuildNumber']
+        
         con_j.build_job('Deploy_Odoo', data)
 
         # Registra build no banco de dados
         data['date_update'] = [datetime.now()]
+
+        if build_id:
+            data['build_id'] = str(build_id)
         
         db.builds.insert(data)
         return jsonify({"status": True}), 200
     except Exception as ex:
         print (ex)
         return jsonify({"status": False}), 400
-
 
 @deployment.route('', methods=["PUT"])
 def update_build():
@@ -143,5 +151,18 @@ def backup_odoo(job_name):
         print('action', job_name)
 
         return jsonify({"status": True}), 200
+    except Exception as ex:
+        return jsonify({"error": ex}), 500
+
+
+@deployment.route('log/<string:build_id>/', methods=['GET'])
+def build_log(build_id):
+    try:
+
+        # Traz o log da Build
+        con_j = connect_jenkins()
+        info = con_j.get_build_console_output('Deploy_Odoo', int(build_id))
+
+        return info
     except Exception as ex:
         return jsonify({"error": ex}), 500

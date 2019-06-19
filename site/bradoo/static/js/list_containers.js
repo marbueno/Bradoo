@@ -281,3 +281,22 @@ $('form[id^="backup-deployment-"]').submit(function (event) {
     });
     return false;
 });
+
+
+function showBuildLog(build_id){
+
+    if (build_id !== null && build_id !== 0) {
+
+        $('#logBuild').html('Carregando...');
+
+        $.ajax({
+            type: "GET",
+            url: "http://18.219.63.233:5000/build/log/" + build_id + "/",
+            datatype: "json",
+            success: function (result) {
+                console.log(result);
+                $('#logBuild').html(result.toString().replace(/\n/g, "<br />"));
+            }
+        })
+    }
+}

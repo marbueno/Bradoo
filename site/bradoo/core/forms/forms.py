@@ -30,7 +30,7 @@ class ImageForm(forms.Form):
 class ImageFormUpdate(forms.Form):
     # image_tagu = forms.CharField(label="Image Tag", max_length=100, required=True, error_messages={'required': 'Please enter your name'})
     image_nameu = forms.CharField(label="Image Name", max_length=100, required=True, error_messages={'required': 'Please enter your name'})
-    url_imageu = forms.URLField(label="URL Image", required=True, error_messages={'required': 'Please enter your name'})
+    url_imageu = forms.CharField(label="URL Image", required=True, error_messages={'required': 'Please enter your name'})
     # commentsu = forms.CharField(label="Produto", max_length=200, required=True, error_messages={'required': 'Add comment'})
 
 class AuthForm(forms.Form):

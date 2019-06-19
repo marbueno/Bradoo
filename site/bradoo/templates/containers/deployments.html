@@ -58,26 +58,27 @@
                     <td>{{ deployment.url_image }}</td>
                     <td class="acoes">
 
-                    <div class="row">
-                    &emsp;
-                    <label class="switch" style="margin-top: 10px;">
-                    <input {% if deployment.replicas %}checked{% endif %} type="checkbox" id="switch-{{ deployment.name }}" value="{{ deployment.name }}@@{{ deployment.namespace }}@@{{ deployment.replicas }}">
-                    <span class="slider round"></span>
-                    </label>
+                        <div class="row">
+                            &emsp;
+                            <label class="switch" style="margin-top: 10px;" title="Ativo / Desativado">
+                                <input {% if deployment.replicas %}checked{% endif %} type="checkbox" id="switch-{{ deployment.name }}" value="{{ deployment.name }}@@{{ deployment.namespace }}@@{{ deployment.replicas }}">
+                                <span class="slider round"></span>
+                            </label>
 
-                        <form id="rm-deployment-{{ deployment.name  }}">
-                            <input name="deployment" value="{{ deployment.name }}" type="hidden">
-                            <button class="btn" id="rm-image-btn"><i class="fa fa-trash"></i></button>
-                        </form>
-                        <form id="back-deployment-{{ deployment.name  }}">
-                            <input name="deployment" value="{{ deployment.name }}" type="hidden">
-                            <button class="btn"><i class="fas fa-reply-all"></i></button>
-                        </form>
-                        <button class="btn" data-toggle="modal" data-target="#updateJob-{{ deployment.name }}"><i class="fas fa-sync"></i></button>
-                        <form id="backup-deployment-{{ deployment.name  }}">
-                            <input name="deployment" value="{{ deployment.name }}" type="hidden">
-                            <button class="btn"><i class="fas fa-search"></i></button>
-                        </form>
+                            <form id="rm-deployment-{{ deployment.name  }}">
+                                <input name="deployment" value="{{ deployment.name }}" type="hidden">
+                                <button class="btn" id="rm-image-btn"  title="Excluir instância"><i class="fa fa-trash"></i></button>
+                            </form>
+                            <form id="back-deployment-{{ deployment.name  }}">
+                                <input name="deployment" value="{{ deployment.name }}" type="hidden">
+                                <button class="btn"><i class="fas fa-reply-all" title="Efetuar Rollback"></i></button>
+                            </form>
+                            <button class="btn" data-toggle="modal" data-target="#updateJob-{{ deployment.name }}" title="Atualizar Instância"><i class="fas fa-sync"></i></button>
+                            <form id="backup-deployment-{{ deployment.name  }}">
+                                <input name="deployment" value="{{ deployment.name }}" type="hidden">
+                                <button class="btn"><i class="fas fa-search" title="Efetuar Backup"></i></button>
+                            </form>
+                            <button class="btn" data-toggle="modal" data-target="#logJob" title="Visualizar Log" data-toggle="modal" onclick="javascript:showBuildLog('{{ deployment.build_id }}')"><i class="fas fa-history"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -95,6 +96,7 @@
 
 {% include 'containers/modal_pods.html' %}
 {% include 'containers/modal-build.html' %}
+{% include 'containers/modal-log-build.html' %}
 {% include 'containers/modal-create.html' %}
 {% include 'containers/modal-update.html' %}
 
