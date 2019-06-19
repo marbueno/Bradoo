@@ -110,10 +110,37 @@ def products_views(request):
     return render(request, 'products/index.html', context)
 
 def bulk_update_views(request):
-    headers = {'Content-Type': 'application/json'}
+    log = []
 
-    deployments = requests.get('http://127.0.0.1:5000/build/', headers=headers).json()
+    try:
+        # Request deployments
+        v1 = client.ExtensionsV1beta1Api()
+        deployments_kubernets = v1.list_deployment_for_all_namespaces()
+
+        # Request output jenkins
+        headers = {'Content-type': 'application/json'}
+        builds = requests.get('http://18.219.63.233:5000/build/', headers=headers).json()
+
+        deployments = []
+        for deployment in deployments_kubernets.items:
+            try:
+                deploy = requests.get('http://18.219.63.233:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
+
+                deploy['replicas'] = deployment.spec.replicas
+                deploy['namespace'] = deployment.metadata.namespace
+
+                deployments.append(deploy)
+
+            except Exception as ex:
+                log.append('ERRO')
+                log.append(ex)
+                continue
+   
+    except Exception as ex:
+        log.append(ex)
+
     context = {
         "deployments": deployments
     }
+
     return render(request, 'bulk_update/index.html', context)
