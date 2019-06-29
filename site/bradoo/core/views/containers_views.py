@@ -17,35 +17,37 @@ def deployments_views(request):
 
     try:
         # Request deployments
-        v1 = client.ExtensionsV1beta1Api()
-        deployments_kubernets = v1.list_deployment_for_all_namespaces()
+        # v1 = client.ExtensionsV1beta1Api()
+        # deployments_kubernets = v1.list_deployment_for_all_namespaces()
 
         # Request output jenkins
         headers = {'Content-type': 'application/text'}
         headers2 = {'Content-type': 'application/json'}
-        output = requests.get('http://127.0.0.1:5000/jenkins/output/',
-                            headers=headers).text
-        output = output.split('\n')
-
+        # output = requests.get('http://127.0.0.1:5000/jenkins/output/',
+        #                     headers=headers).text
+        # output = output.split('\n')
+        output = []
         images = requests.get('http://127.0.0.1:5000/image/', headers=headers).json()
         products = requests.get('http://127.0.0.1:5000/produto/', headers=headers).json()
         builds = requests.get('http://127.0.0.1:5000/build/', headers=headers2).json()
 
-        deployments = []
-        for deployment in deployments_kubernets.items:
-            try:
 
-                deploy = requests.get('http://127.0.0.1:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
 
-                deploy['replicas'] = deployment.spec.replicas
-                deploy['namespace'] = deployment.metadata.namespace
+        # deployments = []
+        # for deployment in deployments_kubernets.items:
+        #     try:
 
-                deployments.append(deploy)
+        #         deploy = requests.get('http://127.0.0.1:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
 
-            except Exception as ex:
-                log.append('ERRO')
-                log.append(ex)
-                continue
+        #         deploy['replicas'] = deployment.spec.replicas
+        #         deploy['namespace'] = deployment.metadata.namespace
+
+        #         deployments.append(deploy)
+
+        #     except Exception as ex:
+        #         log.append('ERRO')
+        #         log.append(ex)
+        #         continue
 
         # form createjob
         formJob = JobForm()
@@ -55,10 +57,11 @@ def deployments_views(request):
     except Exception as ex:
         log.append(ex)
                 
-    log.append(deployments)
+    # log.append(deployments)
 
     context = {
-        "deployments": deployments,
+        # "deployments": deployments,
+        "deployments": builds,
         "output_jenkins": output,
         "log": log,
         "formJob": formJob,

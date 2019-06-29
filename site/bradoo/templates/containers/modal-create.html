@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createJobLabel">Create Job</h5>
+                <h5 class="modal-title" id="createJobLabel">Criar Instância</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -12,29 +12,38 @@
                 <form id="createbuild">
                     <div class="form-group">
                         <label>Produto</label>
-                            <select class="form-control" name="product">
-                                <option value="None" selected="selected">None</option>
-                            {% for product in products %}
-                                <option value="{{ product.id }}">{{ product.product }}</option>
-                            {% endfor %}
-                            </select>
+                        <select class="form-control" name="product" id="auto_fill_product">
+                            <option value="None" selected="selected" >None</option>
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.product }}</option>
+                        {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="auto_fill_image">Image Tag</label>
-                            <select class="form-control" id="auto_fill_image" name="image">
-                                <option value="None" selected="selected">None</option>
-                                {% for image in images %}
-                                <option value="{{ image.id }}">{{ image.image_tag }}</option>
-                                {% endfor %}
-                                <input id="id_image_tagu" name="image_tag" type="hidden" value="">
-                            </select>
+                        <select class="form-control" id="images" name="images">
+                            <option value="None" selected="selected">None</option>
+                            <input id="id_image_tagu" name="image_tag" type="hidden" value="">
+                        </select>
                     </div>
-                {{ formupdateimage|bootstrap }}
                 {{ formJob|bootstrap }}
-              <div class="modal-footer">
-                  <button class="btn btn-primary button">Construir</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-              </div>
+
+                <div class="form-group">
+                 <label>Modelo de Banco de Dados</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="typedb" id="typedbDEMO" value="demo">
+                    <label class="form-check-label" for="typedbDEMO">Demo</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="typedb" id="typedbPROD" value="prod">
+                    <label class="form-check-label" for="typedbPROD">Produção</label>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary button">Construir</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
               </form>
             </div>
         </div>

@@ -5,6 +5,10 @@ from django import forms
 
 class JobForm(forms.Form):
     name = forms.CharField(label="Nome da Instância", max_length=50, required=False, error_messages={'required': 'Please enter your name'})
+    cnpj_cpf = forms.CharField(label="CNPJ ou CPF", max_length=14, required=False, error_messages={'required': 'Please enter your name'})
+    nome_razaosocial = forms.CharField(label="Nome ou Razão Social", max_length=100, required=False, error_messages={'required': 'Please enter your name'})
+    login = forms.CharField(label="Login (Usuário Odoo)", max_length=30, required=False, error_messages={'required': 'Please enter your name'})
+    password = forms.CharField(label="Senha (Usuário Odoo)", widget=forms.PasswordInput, max_length=20, required=False, error_messages={'required': 'Please enter your name'})
    #username_odoo = forms.CharField(label="Username", required=False)
    # odoo_email = forms.EmailField(label="E-mail", required=False)
    # smtp_host = forms.URLField(label="Host smtp", initial='https://', required=False)
@@ -25,8 +29,6 @@ class ImageForm(forms.Form):
     image_tag = forms.CharField(label="Image Tag", max_length=50, required=True, error_messages={'required': 'Please enter your name'})
     image_name = forms.CharField(label="Image Name", max_length=50, required=True, error_messages={'required': 'Please enter your name'})
     url_image = forms.CharField(label="URL Image (Registry)")
-    # mod_bd_prd = forms.FileField(label="Modelo de Banco de Dados de PRD", required=False)
-    # mod_bd_demo = forms.FileField(label="Modelo de Banco de Dados de DEMO", required=False)
     # comments = forms.CharField(label="Produto", max_length=50, required=True, error_messages={'required': 'Add comment'})
 
 class ImageFormUpdate(forms.Form):
