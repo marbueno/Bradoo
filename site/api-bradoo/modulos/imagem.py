@@ -2,15 +2,20 @@ from flask import Blueprint, jsonify, request
 from pymongo import MongoClient
 from bson import ObjectId
 from .worker import *
+import io
+import os
 
 
 # Connect mongodb
+# con = MongoClient(host="localhost",port=27017)
 con = MongoClient()
 db = con['bradoo']
 
 
 # create blueprint
 image = Blueprint('image', __name__, url_prefix='/image/')
+
+baseFilePath = os.path.abspath('')
 
 
 @image.route('', methods=["POST"])
@@ -21,8 +26,21 @@ def register_image():
     :return:
     """
     try:
-        data = request.json
-        db.images.insert(format_data(data))
+        data = format_data(request.json)
+
+        id_mod_bd_prd = data['id_mod_bd_prd']
+        id_mod_bd_demo = data['id_mod_bd_demo']
+
+        if id_mod_bd_prd != '':
+            id_mod_bd_prd = baseFilePath + '/filesUploaded/' + id_mod_bd_prd
+            data['id_mod_bd_prd'] = id_mod_bd_prd
+
+        if id_mod_bd_demo != '':
+            id_mod_bd_demo = baseFilePath + '/filesUploaded/' + id_mod_bd_demo
+            data['id_mod_bd_demo'] = id_mod_bd_demo
+
+        # data = request.json
+        db.images.insert(data)
         return jsonify({"status": True}), 200
     except Exception as ex:
         return jsonify({"status": False}), 400
@@ -74,70 +92,54 @@ def remove_image(id):
 def update_image(id):
     data = format_data(request.json)
     try:
+        
+        id_mod_bd_prd = data['id_mod_bd_prd']
+        id_mod_bd_demo = data['id_mod_bd_demo']
+
+        if id_mod_bd_prd != '' and 'filesUploaded' not in id_mod_bd_prd:
+            id_mod_bd_prd = baseFilePath + '/filesUploaded/' + id_mod_bd_prd
+
+        if id_mod_bd_demo != '' and 'filesUploaded' not in id_mod_bd_demo:
+            id_mod_bd_demo = baseFilePath + '/filesUploaded/' + id_mod_bd_demo
+
         update = {
             "image_name": data['image_name'],
             "image_tag": data['image_tag'],
             "url_image": data['url_image'],
             'product': data['product'],
-            'typedb': data['typedb']
+            'id_mod_bd_prd': id_mod_bd_prd,
+            'id_mod_bd_demo': id_mod_bd_demo
         }
+
         db.images.update({"_id": ObjectId(id)}, {"$set": update})
+
         return jsonify({"status": True}), 200
+
     except Exception as ex:
+        print (ex)
         return jsonify({"status": False}), 400
 
 
-# @image.route('', methods=['POST', 'GET', 'DELETE', 'PUT'])
-# @image.route('<string:name>/', methods=["GET"])
-# def register_image(name=None):
-#     """
-#     Realiza CRUD de imagens.
-#
-#     :param name:
-#     :return:
-#     """
-#     if request.method == "POST":
-#         try:
-#             data = request.form
-#             db.images.insert(
-#                 {
-#                     "url_image": data['url_image'],
-#                     "image_name": data['image_name'],
-#                     "image_tag": data['image_tag'],
-#                     "comments": data['comments'],
-#                 })
-#             return jsonify({'status': True}), 200
-#         except Exception as e:
-#             return jsonify({'status': e}), 500
-#     elif request.method == "GET":
-#         if not name:
-#             imgs = list(db.images.find())
-#             for img in imgs:
-#                 img['_id'] = str(img['_id'])
-#             return jsonify(imgs), 200
-#         else:
-#             img = db.images.find_one({"image_name": name})
-#             img['_id'] = str(img['_id'])
-#             return jsonify(img), 200
-#
-#     elif request.method == "DELETE":
-#         data = request.form
-#         try:
-#             db.images.remove({"image_name": data['image']})
-#             return jsonify({"status": True}), 200
-#         except Exception as e:
-#             return jsonify({"status": e}), 500
-#
-#     elif request.method == "PUT":
-#         data = request.form
-#         try:
-#             update = {
-#                 "image_name": data['image_nameu'],
-#                 "image_tag": data['image_tagu'],
-#                 "comments": data['commentsu'],
-#                 "url_image": data['url_imageu']
-#             }
-#             db.images.update({"image_name": data['image_name']}, {"$set": update})
-#             return jsonify({"status": True}), 200
-#         except Exception as e:
-#             return jsonify({"status": False}), 500
+
+@image.route('/uploadFile', methods=["POST"])
+def file_upload():
+    try:
+        print (request.files)
+
+        for flName in request.files:
+    
+            if flName:
+                file = request.files[flName]
+                
+                filePath = baseFilePath + '/filesUploaded/' + flName
+
+                print (filePath)
+
+                file.save(filePath)
+
+        return jsonify({"status": True}), 200
+        
+    except Exception as ex:
+        print ('erro')
+        print (ex)
+        return jsonify({"status": False}), 400

@@ -22,9 +22,11 @@ class JobFormUpdate(forms.Form):
     #passdbu = forms.CharField(label="Passdb", required=False)
 
 class ImageForm(forms.Form):
-    url_image = forms.CharField(label="URL Image")
-    image_name = forms.CharField(label="Image Name", max_length=50, required=True, error_messages={'required': 'Please enter your name'})
     image_tag = forms.CharField(label="Image Tag", max_length=50, required=True, error_messages={'required': 'Please enter your name'})
+    image_name = forms.CharField(label="Image Name", max_length=50, required=True, error_messages={'required': 'Please enter your name'})
+    url_image = forms.CharField(label="URL Image (Registry)")
+    # mod_bd_prd = forms.FileField(label="Modelo de Banco de Dados de PRD", required=False)
+    # mod_bd_demo = forms.FileField(label="Modelo de Banco de Dados de DEMO", required=False)
     # comments = forms.CharField(label="Produto", max_length=50, required=True, error_messages={'required': 'Add comment'})
 
 class ImageFormUpdate(forms.Form):

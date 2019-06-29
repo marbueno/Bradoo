@@ -2,7 +2,7 @@ $("#createbuild").submit(function (event) {
     event.preventDefault();
     debugger;
     var data = $( this ).serializeArray();
-    var url = 'http://18.219.63.233:5000/build/';
+    var url = 'http://127.0.0.1:5000/build/';
     $.ajax({
         type: "POST",
         url: url,
@@ -69,7 +69,7 @@ $('input[id^="switch"]').click(function (e) {
           if (result.value) {
               $.ajax({
         type: 'POST',
-        url:'http://18.219.63.233:5000/scale/',
+        url:'http://127.0.0.1:5000/scale/',
         data: data,
         datatype: 'text',
         success:function () {
@@ -105,7 +105,7 @@ $('select[id^="auto_fill_image"]').focusout(function () {
     var image = $( this ).val();
     $.ajax({
         type: "GET",
-        url: "http://18.219.63.233:5000/image/" + image + "/",
+        url: "http://127.0.0.1:5000/image/" + image + "/",
         datatype: "json",
         success: function (result) {
             $('input[name=image_nameu').val(result.image_name);
@@ -119,7 +119,7 @@ $('select[id^="auto_fill_image"]').focusout(function () {
 $('form[id^="updatejob-"]').submit(function (event) {
     event.preventDefault();
     var data = $( this ).serializeArray();
-    var url = 'http://18.219.63.233:5000/build/';
+    var url = 'http://127.0.0.1:5000/build/';
     debugger;
     $.ajax({
         type: "PUT",
@@ -166,7 +166,7 @@ $('form[id^="back-deployment-"]').submit(function (event) {
           if (result.value) {
               $.ajax({
                         type: 'POST',
-                        url:'http://18.219.63.233:5000/build/rollback/'+data[0]['value']+'/',
+                        url:'http://127.0.0.1:5000/build/rollback/'+data[0]['value']+'/',
                         success:function () {
                             Swal.fire({
                                 type: 'success',
@@ -210,7 +210,7 @@ $('form[id^="rm-deployment-"]').submit(function (event) {
           if (result.value) {
               $.ajax({
                         type: 'DELETE',
-                        url:'http://18.219.63.233:5000/build/'+data[0]['value']+'/',
+                        url:'http://127.0.0.1:5000/build/'+data[0]['value']+'/',
                         success:function () {
                             Swal.fire({
                                 type: 'success',
@@ -254,7 +254,7 @@ $('form[id^="backup-deployment-"]').submit(function (event) {
           if (result.value) {
               $.ajax({
                         type: 'POST',
-                        url:'http://18.219.63.233:5000/build/backup/'+data[0]['value']+'/',
+                        url:'http://127.0.0.1:5000/build/backup/'+data[0]['value']+'/',
                         success:function () {
                             Swal.fire({
                                 type: 'success',
@@ -291,7 +291,7 @@ function showBuildLog(build_id){
 
         $.ajax({
             type: "GET",
-            url: "http://18.219.63.233:5000/build/log/" + build_id + "/",
+            url: "http://127.0.0.1:5000/build/log/" + build_id + "/",
             datatype: "json",
             success: function (result) {
                 console.log(result);

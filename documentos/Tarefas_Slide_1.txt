@@ -1,0 +1,10 @@
+==== ARQUIVOS ALTERADOS - SLIDE 1 ====
+
+API
+imagem.py
+
+WEB
+forms.py
+images.js
+/templates/images/createOrEdit.html
+/templates/images/index.html

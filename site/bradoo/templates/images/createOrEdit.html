@@ -3,13 +3,13 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="registerimageLabel">Registro de Imagem</h3>
+                <h3 class="modal-title" id="registerimageLabel">Cadastro de Imagem</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="registry-images">
+                <form id="registry-images" enctype="multipart/form-data">
                     <div class="form-group">
                         <label>Produto</label>
                             <select class="form-control" name="product" id="product">
@@ -20,17 +20,29 @@
                         </select>
                     </div>
                     {{ form|bootstrap }}
+
                     <div class="form-group">
-                    <label>Tipo de Banco de Dados</label>
+                        <label>Modelo de Banco de Dados de PRD</label>
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 20px;"><label for="id_mod_bd_prd" class="inputLabel">UPLOAD</label></td>
+                                <td><div id="div_mod_bd_prd">Nenhum Arquivo Selecionado</div></td>
+                            </tr>
+                        </table>
+                        <input type="file" id="id_mod_bd_prd" style="opacity: 0">
                     </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="typedb" id="radDemo" value="demo">
-                      <label class="form-check-label" for="radDemo">Demo</label>
+
+                    <div class="form-group">
+                        <label>Modelo de Banco de Dados de Demo</label>
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 20px;"><label for="id_mod_bd_demo" class="inputLabel">UPLOAD</label></td>
+                                <td><div id="div_mod_bd_demo">Nenhum Arquivo Selecionado</div></td>
+                            </tr>
+                        </table>
+                        <input type="file" id="id_mod_bd_demo" style="opacity: 0">
                     </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="typedb" id="radLimpo" value="limpo">
-                      <label class="form-check-label" for="radLimpo">Limpo</label>
-                    </div>
+                    
                     <div class="modal-footer">
                         <button class="btn btn-primary button">Salvar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -40,3 +52,27 @@
         </div>
     </div>
 </div>
+
+<style>
+
+.inputLabel {
+  background-color: gray;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px ridge gray;
+  height: auto;
+  color: white;
+  cursor: pointer;
+}
+
+.inputLabel:hover {
+  background-color:rgb(43, 42, 42);
+  color: white;
+}
+
+.inputLabel:active {
+  background-color: rgb(43, 42, 42);;
+  color: white;
+}
+
+</style>

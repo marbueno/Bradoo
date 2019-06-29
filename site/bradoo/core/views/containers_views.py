@@ -23,19 +23,19 @@ def deployments_views(request):
         # Request output jenkins
         headers = {'Content-type': 'application/text'}
         headers2 = {'Content-type': 'application/json'}
-        output = requests.get('http://18.219.63.233:5000/jenkins/output/',
+        output = requests.get('http://127.0.0.1:5000/jenkins/output/',
                             headers=headers).text
         output = output.split('\n')
 
-        images = requests.get('http://18.219.63.233:5000/image/', headers=headers).json()
-        products = requests.get('http://18.219.63.233:5000/produto/', headers=headers).json()
-        builds = requests.get('http://18.219.63.233:5000/build/', headers=headers2).json()
+        images = requests.get('http://127.0.0.1:5000/image/', headers=headers).json()
+        products = requests.get('http://127.0.0.1:5000/produto/', headers=headers).json()
+        builds = requests.get('http://127.0.0.1:5000/build/', headers=headers2).json()
 
         deployments = []
         for deployment in deployments_kubernets.items:
             try:
 
-                deploy = requests.get('http://18.219.63.233:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
+                deploy = requests.get('http://127.0.0.1:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
 
                 deploy['replicas'] = deployment.spec.replicas
                 deploy['namespace'] = deployment.metadata.namespace
@@ -119,12 +119,12 @@ def bulk_update_views(request):
 
         # Request output jenkins
         headers = {'Content-type': 'application/json'}
-        builds = requests.get('http://18.219.63.233:5000/build/', headers=headers).json()
+        builds = requests.get('http://127.0.0.1:5000/build/', headers=headers).json()
 
         deployments = []
         for deployment in deployments_kubernets.items:
             try:
-                deploy = requests.get('http://18.219.63.233:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
+                deploy = requests.get('http://127.0.0.1:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
 
                 deploy['replicas'] = deployment.spec.replicas
                 deploy['namespace'] = deployment.metadata.namespace
