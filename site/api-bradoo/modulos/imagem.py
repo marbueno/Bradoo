@@ -8,7 +8,7 @@ import os
 
 # Connect mongodb
 # con = MongoClient(host="localhost",port=27017)
-con = MongoClient()
+con = MongoClient(host="localhost",port=27017)
 db = con['bradoo']
 
 

@@ -10,7 +10,7 @@ import os
 
 
 # Connect mongodb
-con = MongoClient(host="localhost",port=27017)
+con = MongoClient()
 db = con['bradoo']
 
 config.load_kube_config()
@@ -97,8 +97,6 @@ def register_build():
     try:
         # formata json recebido
         data = format_data(request.json)
-        data['url_image'] = data.pop("url_imageu")
-        data['image_name'] = data.pop("image_nameu")
 
         print ('BUILD em Andamento')
 
@@ -126,8 +124,6 @@ def update_build():
     try:
         # formata json recebido
         data = format_data(request.json)
-        data['url_image'] = data.pop("url_imageu")
-        data['image_name'] = data.pop("image_nameu")
 
         # Executa o build de create no jenkins
         con_j = connect_jenkins()
