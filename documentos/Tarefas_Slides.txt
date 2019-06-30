@@ -1,0 +1,22 @@
+==== ARQUIVOS ALTERADOS - SLIDE 1 ====
+
+API
+imagem.py
+
+WEB
+forms.py
+images.js
+/templates/images/createOrEdit.html
+/templates/images/index.html
+
+
+
+==== ARQUIVOS ALTERADOS - SLIDE 2 ====
+
+API
+deployment.py
+
+WEB
+forms.py
+modal-create.html
+list_containers.js

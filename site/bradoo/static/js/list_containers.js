@@ -1,7 +1,18 @@
+var images = []
+
 $("#createbuild").submit(function (event) {
     event.preventDefault();
     debugger;
     var data = $( this ).serializeArray();
+
+    images.forEach(itemImage => {
+        if (itemImage._id === $("#images").val()){
+            data.push({ name: "image_tag", value: itemImage.image_tag});
+            data.push({ name: "url_image", value: itemImage.url_image});
+            data.push({ name: "image_name", value: itemImage.image_name});
+        }
+    });
+
     var url = 'http://18.219.63.233:5000/build/';
     $.ajax({
         type: "POST",
@@ -103,9 +114,10 @@ $("#auto_fill_product").focusout(function () {
         url: "http://18.219.63.233:5000/image/",
         datatype: "json",
         success: function (result) {
+            images = result;
             result.forEach(itemImage => {
                 if (itemImage.product === product){
-                    $("#images").append('<option value="' + itemImage.id + '">' + itemImage.image_tag + '</option>');
+                    $("#images").append('<option value="' + itemImage._id + '">' + itemImage.image_tag + '</option>');
                 }
             });
         }
