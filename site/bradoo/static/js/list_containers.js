@@ -5,12 +5,20 @@ $("#createbuild").submit(function (event) {
     event.preventDefault();
     debugger;
     var data = $( this ).serializeArray();
+    var produto = $("#product option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+    data.push({ name: "produto", value: produto});
 
     images.forEach(itemImage => {
         if (itemImage._id === $("#images").val()){
             data.push({ name: "image_tag", value: itemImage.image_tag});
             data.push({ name: "url_image", value: itemImage.url_image});
             data.push({ name: "image_name", value: itemImage.image_name});
+
+            if($('#typedbDEMO').is(':checked'))
+                data.push({ name: "pathdb", value: itemImage.id_mod_bd_demo});
+
+            if($('#typedbPROD').is(':checked'))
+                data.push({ name: "pathdb", value: itemImage.id_mod_bd_prd});
         }
     });
 
@@ -63,9 +71,25 @@ $('#updatebuild').submit(function (event) {
     var data = $( this ).serializeArray();
     var url = 'http://18.219.63.233:5000/build/' + build._id + "/";
 
-    data.push({ name: "product", value: build.product});
-    data.push({ name: "image_tag", value: build.image_tag});
-    data.push({ name: "name", value: build.name});
+    var produto = $("#productu option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+    data.push({ name: "produto", value: produto});
+
+    images.forEach(itemImage => {
+        if (itemImage._id === $("#imagesu").val()){
+            data.push({ name: "image_id", value: itemImage._id});
+            data.push({ name: "product", value: itemImage.product});
+            data.push({ name: "image_tag", value: itemImage.image_tag});
+            data.push({ name: "url_image", value: itemImage.url_image});
+            data.push({ name: "image_name", value: itemImage.image_name});
+            data.push({ name: "name", value: build.name});
+
+            if($('#typedbuDEMO').is(':checked'))
+                data.push({ name: "pathdb", value: itemImage.id_mod_bd_demo});
+
+            if($('#typedbuPROD').is(':checked'))
+                data.push({ name: "pathdb", value: itemImage.id_mod_bd_prd});
+        }
+    });
     
     $.ajax({
         type: "PUT",
@@ -139,7 +163,7 @@ $('input[id^="switch"]').click(function (e) {
     })
 });
 
-$("#auto_fill_product").focusout(function () {
+$("#product").focusout(function () {
     var product = $( this ).val();
     $('#images').children('option:not(:first)').remove();
     $.ajax({
@@ -311,6 +335,7 @@ function showBuildLog(build_id) {
 function setValuesFields(name){
 
     $('[name="name"]').prop( "disabled", true );
+    $('#imagesu').children('option:not(:first)').remove();
 
     $.ajax({
         type: "GET",
@@ -321,7 +346,6 @@ function setValuesFields(name){
             build = result;
 
             $('#productu').val(result.product);
-            $('#imageu').val(result.image_id);
             $('[name="name"]').val(result.name);
             $('[name="cnpj_cpf"]').val(result.cnpj_cpf);
             $('[name="nome_razaosocial"]').val(result.nome_razaosocial);
@@ -333,6 +357,25 @@ function setValuesFields(name){
 
             if (result.typedb === "prod")
                 $("#typedbuPROD").prop("checked", true);
+    
+            $.ajax({
+                type: "GET",
+                url: "http://18.219.63.233:5000/image/",
+                datatype: "json",
+                success: function (resultImage) {
+                    images = resultImage;
+                    $('#imagesu').find('option').remove();
+                    resultImage.forEach(itemImage => {
+                        if (itemImage.product === result.product){
+
+                            if (itemImage._id === result.image_id)
+                                $("#imagesu").append('<option value="' + itemImage._id + '" selected>' + itemImage.image_tag + '</option>');
+                            else
+                                $("#imagesu").append('<option value="' + itemImage._id + '">' + itemImage.image_tag + '</option>');
+                        }
+                    });
+                }
+            })
         
         }
     })

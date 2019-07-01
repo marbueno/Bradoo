@@ -12,7 +12,7 @@
                 <form id="createbuild">
                     <div class="form-group">
                         <label>Produto</label>
-                        <select class="form-control" name="product" id="auto_fill_product">
+                        <select class="form-control" id="product" name="product">
                             <option value="None" selected="selected" >None</option>
                         {% for product in products %}
                             <option value="{{ product.id }}">{{ product.product }}</option>

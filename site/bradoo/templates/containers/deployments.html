@@ -92,14 +92,14 @@
     </div>
 </div>
 
-{% block scripts %}
-    <script src="{% static 'js/list_containers.js' %}"></script>
-{% endblock %}
-
 {% include 'containers/modal_pods.html' %}
 {% include 'containers/modal-build.html' %}
 {% include 'containers/modal-log-build.html' %}
 {% include 'containers/modal-create.html' %}
 {% include 'containers/modal-update.html' %}
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/list_containers.js' %}"></script>
 {% endblock %}
