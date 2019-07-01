@@ -10,6 +10,7 @@ import os
 
 
 # Connect mongodb
+# con = MongoClient()
 con = MongoClient()
 db = con['bradoo']
 
@@ -119,8 +120,8 @@ def register_build():
         print (ex)
         return jsonify({"status": False}), 400
 
-@deployment.route('', methods=["PUT"])
-def update_build():
+@deployment.route('<string:id>/', methods=["PUT"])
+def update_build(id):
     try:
         # formata json recebido
         data = format_data(request.json)
@@ -130,11 +131,20 @@ def update_build():
         con_j.build_job('Upgrade_Odoo', data)
 
         # Registra updatebuild no banco de dados
-        db.builds.update({"name": data['name']}, {"$push": {"date_update": datetime.now()}})
-        db.builds.update({"name": data['name']}, {"$set": data})
+        updateBuild = {
+            "cnpj_cpf": data['cnpj_cpf'],
+            "nome_razaosocial": data['nome_razaosocial'],
+            "login": data['login'],
+            'password': data['password'],
+            'typedb': data['typedb'],
+            'date_update': datetime.now()
+        }
+
+        db.builds.update({"_id": ObjectId(id)}, {"$set": updateBuild})
 
         return jsonify({"status": True}), 200
     except Exception as ex:
+        print (ex)
         return jsonify({"status": False}), 400
 
 
