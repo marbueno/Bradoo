@@ -101,6 +101,8 @@ def register_build():
 
         print ('BUILD em Andamento')
 
+        print (data)
+
         # Executa o build de create no jenkins
         con_j = connect_jenkins()
 
@@ -126,6 +128,8 @@ def update_build(id):
         # formata json recebido
         data = format_data(request.json)
 
+        print (data)
+
         # Executa o build de create no jenkins
         con_j = connect_jenkins()
         con_j.build_job('Upgrade_Odoo', data)
@@ -133,6 +137,7 @@ def update_build(id):
         # Registra updatebuild no banco de dados
         updateBuild = {
             "cnpj_cpf": data['cnpj_cpf'],
+            "image_id": data['image_id'],
             "nome_razaosocial": data['nome_razaosocial'],
             "login": data['login'],
             'password': data['password'],
