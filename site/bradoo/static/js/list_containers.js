@@ -325,8 +325,12 @@ function showBuildLog(build_id) {
             url: "http://18.219.63.233:5000/build/log/" + build_id + "/",
             datatype: "json",
             success: function (result) {
-                console.log(result);
-                $('#logBuild').html(result.toString().replace(/\n/g, "<br />"));
+                if (result.indexOf('==========================') !== -1){
+                    $('#logBuild').html(result.substring(result.indexOf('==========================')).toString().replace(/\n/g, "<br />"));
+                }
+                else{
+                    $('#logBuild').html("Dados Indisponíveis");
+                }
             }
         })
     }

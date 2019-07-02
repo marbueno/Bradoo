@@ -46,6 +46,7 @@
                     <th>CNPJ / CPF</th>
                     <th>Nome / Razão Social</th>
                     <th>Endereço URL</th>
+                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
@@ -57,7 +58,8 @@
                     <td>{{ deployment.name }}</td>
                     <td>{{ deployment.cnpj_cpf }}</td>
                     <td>{{ deployment.nome_razaosocial }}</td>
-                    <td>{{ deployment.url_image }}</td>
+                    <td></td>
+                    <td>{% if deployment.replicas %}Ativa{% else %}Desativada{% endif %}</td>
                     <td class="acoes">
 
                         <div class="row">
@@ -71,22 +73,23 @@
                                 <input name="deployment" value="{{ deployment.name }}" type="hidden">
                                 <button class="btn" id="rm-image-btn"  title="Excluir instância"><i class="fa fa-trash"></i></button>
                             </form>
-                            <form id="back-deployment-{{ deployment.name  }}">
+                            <!-- <form id="back-deployment-{{ deployment.name  }}">
                                 <input name="deployment" value="{{ deployment.name }}" type="hidden">
                                 <button class="btn"><i class="fas fa-reply-all" title="Efetuar Rollback"></i></button>
-                            </form>
+                            </form> -->
                             <button class="btn" data-toggle="modal" data-target="#updateJob" title="Atualizar Instância" onclick="setValuesFields('{{ deployment.name }}')""><i class="fas fa-sync"></i></button>
                             <form id="backup-deployment-{{ deployment.name  }}">
                                 <input name="deployment" value="{{ deployment.name }}" type="hidden">
                                 <button class="btn"><i class="fas fa-search" title="Efetuar Backup"></i></button>
                             </form>
-                            <button class="btn" data-toggle="modal" data-target="#logJob" title="Visualizar Log" data-toggle="modal" onclick="javascript:showBuildLog('{{ deployment.build_id }}')"><i class="fas fa-history"></i></button>
 
                             <form id="log-pod-{{ deployment.container_name }}">
                                 <input name="name" value="{{ deployment.container_name }}" type="hidden">
                                 <input name="namespace" value="{{ deployment.namespace }}" type="hidden">
                                 <button class="btn" title="Visualizar Log"><i class="fas fa-history"></i></button>
-                            </form>                            
+                            </form>
+
+                            <button class="btn" data-toggle="modal" data-target="#logJob" title="Dados Administrativos" data-toggle="modal" onclick="javascript:showBuildLog('{{ deployment.build_id }}')"><i class="fas fa-user-cog"></i></button>
                         </div>
                     </td>
                 </tr>
