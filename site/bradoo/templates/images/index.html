@@ -35,7 +35,6 @@
                   <th>Produto</th>
                   <th>TAG</th>
                   <th>Nome</th>
-                  <th>URL</th>
                   <th>Ações</th>
                 </tr>
                 </thead>
@@ -43,9 +42,8 @@
                 {% for image in images %}
                 <tr>
                   <td>{{ image.product_name }}</td>
-                  <td>{{ image.image_name }}</td>
                   <td>{{ image.image_tag }}</td>
-                  <td>{{ image.url_image }}</td>
+                  <td>{{ image.image_name }}</td>
                   <td class="acoes">
                       <div class="row">
                         <form id="rm-image-{{ image.id }}">
