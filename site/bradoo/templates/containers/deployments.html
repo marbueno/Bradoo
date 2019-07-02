@@ -81,6 +81,12 @@
                                 <button class="btn"><i class="fas fa-search" title="Efetuar Backup"></i></button>
                             </form>
                             <button class="btn" data-toggle="modal" data-target="#logJob" title="Visualizar Log" data-toggle="modal" onclick="javascript:showBuildLog('{{ deployment.build_id }}')"><i class="fas fa-history"></i></button>
+
+                            <form id="log-pod-{{ deployment.container_name }}">
+                                <input name="name" value="{{ deployment.container_name }}" type="hidden">
+                                <input name="namespace" value="{{ deployment.namespace }}" type="hidden">
+                                <button class="btn" title="Visualizar Log"><i class="fas fa-history"></i></button>
+                            </form>                            
                         </div>
                     </td>
                 </tr>
@@ -97,9 +103,11 @@
 {% include 'containers/modal-log-build.html' %}
 {% include 'containers/modal-create.html' %}
 {% include 'containers/modal-update.html' %}
+{% include 'pods/modal_log.html' %}
 
 {% endblock %}
 
 {% block scripts %}
     <script src="{% static 'js/list_containers.js' %}"></script>
+    <script src="{% static 'js/jquery.serializejson.min.js' %}"></script>
 {% endblock %}
