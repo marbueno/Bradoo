@@ -58,7 +58,7 @@
                     <td>{{ deployment.name }}</td>
                     <td>{{ deployment.cnpj_cpf }}</td>
                     <td>{{ deployment.nome_razaosocial }}</td>
-                    <td></td>
+                    <td><a href="http://{{ deployment.name }}.{{ deployment.product_name }}.bradoo.tk" target="_blank">http://{{ deployment.name }}.{{ deployment.product_name }}.bradoo.tk</a></td>
                     <td>{% if deployment.replicas %}Ativa{% else %}Desativada{% endif %}</td>
                     <td class="acoes">
 

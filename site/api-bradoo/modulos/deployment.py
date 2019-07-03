@@ -11,7 +11,7 @@ import os
 
 # Connect mongodb
 # con = MongoClient()
-con = MongoClient()
+con = MongoClient(host="localhost",port=27017)
 db = con['bradoo']
 
 config.load_kube_config()

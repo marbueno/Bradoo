@@ -22,7 +22,7 @@ $("#createbuild").submit(function (event) {
         }
     });
 
-    var url = 'http://18.219.63.233:5000/build/';
+    var url = 'http://127.0.0.1:5000/build/';
     $.ajax({
         type: "POST",
         url: url,
@@ -57,7 +57,7 @@ $('#updatebuild').submit(function (event) {
     event.preventDefault();
     debugger;
     var data = $( this ).serializeArray();
-    var url = 'http://18.219.63.233:5000/build/' + build._id + "/";
+    var url = 'http://127.0.0.1:5000/build/' + build._id + "/";
 
     var produto = $("#productu option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
     data.push({ name: "produto", value: produto});
@@ -127,7 +127,7 @@ $('input[id^="switch"]').click(function (e) {
         if (result.value) {
             $.ajax({
                 type: 'POST',
-                url:'http://18.219.63.233:5000/scale/',
+                url:'http://127.0.0.1:5000/scale/',
                 data: data,
                 datatype: 'text',
                 success:function () {
@@ -160,7 +160,7 @@ $("#product").focusout(function () {
     $('#images').children('option:not(:first)').remove();
     $.ajax({
         type: "GET",
-        url: "http://18.219.63.233:5000/image/",
+        url: "http://127.0.0.1:5000/image/",
         datatype: "json",
         success: function (result) {
             images = result;
@@ -189,7 +189,7 @@ $('form[id^="back-deployment-"]').submit(function (event) {
         if (result.value) {
             $.ajax({
                 type: 'POST',
-                url:'http://18.219.63.233:5000/build/rollback/'+data[0]['value']+'/',
+                url:'http://127.0.0.1:5000/build/rollback/'+data[0]['value']+'/',
                 success:function () {
                     Swal.fire({
                         type: 'success',
@@ -233,7 +233,7 @@ $('form[id^="rm-deployment-"]').submit(function (event) {
         if (result.value) {
             $.ajax({
                 type: 'DELETE',
-                url:'http://18.219.63.233:5000/build/'+data[0]['value']+'/',
+                url:'http://127.0.0.1:5000/build/'+data[0]['value']+'/',
                 success:function () {
                     Swal.fire({
                         type: 'success',
@@ -277,7 +277,7 @@ $('form[id^="backup-deployment-"]').submit(function (event) {
         if (result.value) {
             $.ajax({
                 type: 'POST',
-                url:'http://18.219.63.233:5000/build/backup/'+data[0]['value']+'/',
+                url:'http://127.0.0.1:5000/build/backup/'+data[0]['value']+'/',
                 success:function () {
                     Swal.fire({
                         type: 'success',
@@ -314,7 +314,7 @@ function showBuildLog(build_id) {
 
         $.ajax({
             type: "GET",
-            url: "http://18.219.63.233:5000/build/log/" + build_id + "/",
+            url: "http://127.0.0.1:5000/build/log/" + build_id + "/",
             datatype: "json",
             success: function (result) {
                 if (result.indexOf('==========================') !== -1){
@@ -335,7 +335,7 @@ function setValuesFields(name){
 
     $.ajax({
         type: "GET",
-        url: "http://18.219.63.233:5000/build/" + name,
+        url: "http://127.0.0.1:5000/build/" + name,
         datatype: "json",
         success: function (result) {
 
@@ -356,7 +356,7 @@ function setValuesFields(name){
     
             $.ajax({
                 type: "GET",
-                url: "http://18.219.63.233:5000/image/",
+                url: "http://127.0.0.1:5000/image/",
                 datatype: "json",
                 success: function (resultImage) {
                     images = resultImage;
@@ -380,7 +380,7 @@ function setValuesFields(name){
 $('form[id^="log-pod-"]').on('submit', function (event) {
     event.preventDefault();
     var data = $( this ).serializeJSON();
-    var url = 'http://18.219.63.233:5000/log/';
+    var url = 'http://127.0.0.1:5000/log/';
     debugger;
     $.ajax({
         url: url,
