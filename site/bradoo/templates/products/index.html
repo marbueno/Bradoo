@@ -36,14 +36,14 @@
                         <td>{{ product.product }}</td>
                         <td>{{ product.id }}</td>
                         <td>{{ product.domain }}</td>
-                        <td class="acoes">
+                        <td class="acoes" style="padding-left: 15px;">
                             <div class="row">
                                 <form id="rm-product-{{ product.id }}">
                                     <input name="produto" type="hidden" value="{{ product.id }}">
-                                    <button class="btn" id="rm-product-btn"><i class="fa fa-trash"></i></button>
+                                    <button class="btn2" id="rm-product-btn"><i class="fa fa-trash"></i></button>
                                 </form>
                                 
-                                <button class="btn" id="" data-toggle="modal" data-target="#createproduct" onclick="setValuesFields('{{ product.id }}','{{ product.product }}', '{{ product.domain }}', '{{ product.server }}')"><i class="fa fa-edit"></i></button>
+                                <button class="btn2" id="" data-toggle="modal" data-target="#createproduct" onclick="setValuesFields('{{ product.id }}','{{ product.product }}', '{{ product.domain }}', '{{ product.server }}')"><i class="fa fa-edit"></i></button>
                             </div>
                         </td>
                 </tr>

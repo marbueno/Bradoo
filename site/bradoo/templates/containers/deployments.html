@@ -43,7 +43,7 @@
                     <th>Produto</th>
                     <th>Image TAG</th>
                     <th>Nome instância</th>
-                    <th>CNPJ / CPF</th>
+                    <th>CNPJ</th>
                     <th>Nome / Razão Social</th>
                     <th>Endereço URL</th>
                     <th>Status</th>
@@ -64,32 +64,28 @@
 
                         <div class="row">
                             &emsp;
-                            <label class="switch" style="margin-top: 10px;" title="Ativo / Desativado">
+                            <label class="switch" style="margin-top: 3px; margin-bottom: 0; width:30px; height: 16px;" title="Ativo / Desativado">
                                 <input {% if deployment.replicas %}checked{% endif %} type="checkbox" id="switch-{{ deployment.name }}" value="{{ deployment.name }}@@{{ deployment.namespace }}@@{{ deployment.replicas }}">
                                 <span class="slider round"></span>
                             </label>
 
                             <form id="rm-deployment-{{ deployment.name  }}">
                                 <input name="deployment" value="{{ deployment.name }}" type="hidden">
-                                <button class="btn" id="rm-image-btn"  title="Excluir instância"><i class="fa fa-trash"></i></button>
+                                <button class="btn2" id="rm-image-btn"  title="Excluir instância"><i class="fa fa-trash"></i></button>
                             </form>
-                            <!-- <form id="back-deployment-{{ deployment.name  }}">
-                                <input name="deployment" value="{{ deployment.name }}" type="hidden">
-                                <button class="btn"><i class="fas fa-reply-all" title="Efetuar Rollback"></i></button>
-                            </form> -->
-                            <button class="btn" data-toggle="modal" data-target="#updateJob" title="Atualizar Instância" onclick="setValuesFields('{{ deployment.name }}')""><i class="fas fa-sync"></i></button>
+                            <button class="btn2" data-toggle="modal" data-target="#updateJob" title="Atualizar Instância" onclick="setValuesFields('{{ deployment.name }}')""><i class="fas fa-sync"></i></button>
                             <form id="backup-deployment-{{ deployment.name  }}">
                                 <input name="deployment" value="{{ deployment.name }}" type="hidden">
-                                <button class="btn"><i class="fas fa-search" title="Efetuar Backup"></i></button>
+                                <button class="btn2"><i class="fas fa-search" title="Efetuar Backup"></i></button>
                             </form>
 
                             <form id="log-pod-{{ deployment.container_name }}">
                                 <input name="name" value="{{ deployment.container_name }}" type="hidden">
                                 <input name="namespace" value="{{ deployment.namespace }}" type="hidden">
-                                <button class="btn" title="Visualizar Log"><i class="fas fa-history"></i></button>
+                                <button class="btn2" title="Visualizar Log"><i class="fas fa-history"></i></button>
                             </form>
 
-                            <button class="btn" data-toggle="modal" data-target="#logJob" title="Dados Administrativos" data-toggle="modal" onclick="javascript:showBuildLog('{{ deployment.build_id }}')"><i class="fas fa-user-cog"></i></button>
+                            <button class="btn2" data-toggle="modal" data-target="#logJob" title="Dados Administrativos" data-toggle="modal" onclick="javascript:showBuildLog('{{ deployment.build_id }}')"><i class="fas fa-user-cog"></i></button>
                         </div>
                     </td>
                 </tr>

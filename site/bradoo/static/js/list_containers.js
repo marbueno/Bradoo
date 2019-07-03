@@ -30,35 +30,23 @@ $("#createbuild").submit(function (event) {
         contentType: "application/json; charset=utf-8",
         datatype: "json",
         success:function (data, textStatus, XmlHttpRequest) {
-            $('#createJob').modal('hide');
-            $('body').removeClass('modal-open');
-            $('.modal-backdrop').remove();
-        },
-        error:function (XMLHttpRequest, textStatus, errorThrown) {
-            $('#createJob').modal('hide');
-            $('body').removeClass('modal-open');
-            $('.modal-backdrop').remove();
-        }
-    });
-    let timerInterval
-    Swal.fire({
-        title: 'Build em Execução!',
-        html: 'Tempo de Execução <strong></strong> segundos.',
-        timer: 15000,
-        onBeforeOpen: () => {
-            Swal.showLoading()
-            timerInterval = setInterval(() => {
-            Swal.getContent().querySelector('strong')
-                .textContent = Swal.getTimerLeft()
-            }, 100)
-        },
-        onClose: () => {
-        clearInterval(timerInterval)
-        }
+            Swal.fire({
+                type: 'success',
+                title: 'Sucesso!',
+                text: 'Build Executado!'
+            });
 
-    }).then((result) => {
-        if (result.dismiss === Swal.DismissReason.timer) {
-            $('#outputJenkins').modal('show');
+            window.setTimeout( function() {
+                window.location.reload();
+              } , 1000);   
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(errorThrown);
+            Swal.fire({
+                type:'error',
+                title: 'Oops...',
+                text:'Falha ao executar o build!'
+            });
         }
     });
     return false
@@ -107,9 +95,13 @@ $('#updatebuild').submit(function (event) {
                 text: 'Build Executado!'
             });
 
+            window.setTimeout( function() {
+                window.location.reload();
+              } , 1000);  
+
         },
-        error:function (ex) {
-            console.log(ex);
+        error:function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(errorThrown);
             Swal.fire({
                 type:'error',
                 title: 'Oops...',

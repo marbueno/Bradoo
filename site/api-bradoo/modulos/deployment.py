@@ -138,6 +138,7 @@ def update_build(id):
         updateBuild = {
             "cnpj_cpf": data['cnpj_cpf'],
             "image_id": data['image_id'],
+            "image_tag": data['image_tag'],
             "nome_razaosocial": data['nome_razaosocial'],
             "login": data['login'],
             'password': data['password'],
