@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block head %}
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block  body %}
+<div class="container">
+
+    <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Log do Sistema</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                  <th>Usuário</th>
+                  <th>Data / Hora</th>
+                  <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.user }}</td>
+                        <td>{{ log.datetime }}</td>
+                        <td>{{ log.action }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

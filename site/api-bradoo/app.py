@@ -23,17 +23,14 @@ CORS(app)
 app.register_blueprint(produto)
 app.register_blueprint(image)
 app.register_blueprint(deployment)
+app.register_blueprint(log)
 
 
 # app.register_blueprint(jenkins)
 
 # Connect mongodb
-con = MongoClient(host="localhost",port=27017)
+con = MongoClient()
 db = con['bradoo']
-
-
-
-
 
 @app.route('/jenkins/output/', methods=['GET'])
 def last_build():
@@ -85,4 +82,4 @@ def log_pod():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5000, host='127.0.0.1')
+    app.run(debug=False, port=5000, host='0.0.0.0')
