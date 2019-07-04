@@ -10,7 +10,6 @@ images.js
 /templates/images/index.html
 
 
-
 ==== ARQUIVOS ALTERADOS - SLIDE 2 ====
 
 API
@@ -20,3 +19,58 @@ WEB
 forms.py
 modal-create.html
 list_containers.js
+
+
+==== ARQUIVOS ALTERADOS - SLIDE 3 ====
+
+API
+deployment.py
+
+WEB
+deployments.html
+modal-update.html
+list_containers.js
+
+
+==== ARQUIVOS ALTERADOS - SLIDE 4 ====
+
+WEB
+containers_views.py
+deployments.html
+modal_log.html
+list_containers.js
+
+
+==== ARQUIVOS ALTERADOS - SLIDE 5 ====
+
+WEB
+deployments.html
+list_containers.js
+
+
+==== ARQUIVOS ALTERADOS - SLIDE 6 ====
+
+WEB
+images/index.html
+
+Tarefas - Slide 7
+
+==== ARQUIVOS ALTERADOS - SLIDE 7 ====
+
+API
+Log.py
+App.py
+__init__.py
+
+WEB
+Log.js
+Produtos.js
+Images.js
+List_containeres.js
+Containers_views.py
+Deployments.html
+Produto/Index.html
+Logs/Index.html
+Images/Index.html
+Templates/Index.html
+Urls.py
