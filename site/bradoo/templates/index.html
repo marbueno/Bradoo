@@ -66,12 +66,6 @@
             <span>Instâncias</span></a>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="/pods">
-        <i class="fas fa-puzzle-piece"></i>
-            <span>Contêineres</span></a>
-      </li>
-
         <li class="nav-item">
             <a class="nav-link" href="/bulk">
                 <i class="fas fa-globe"></i>
@@ -99,6 +93,13 @@
                           <a class="nav-link" href="/produto">
                               <i class="fab fa-product-hunt"></i>
                               <span>Produto</span>
+                          </a>
+                      </li>
+
+                      <li class="nav-item">
+                          <a class="nav-link" href="/logs">
+                              <i class="fas fa-history"></i>
+                              <span>Logs</span>
                           </a>
                       </li>
 
@@ -140,7 +141,7 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown show">
               <a class="nav-link" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.username }}</span>
+                <span id="username" class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.username }}</span>
                 <img class="img-profile rounded-circle" src="{% static 'img/anonimo.png' %}">
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">

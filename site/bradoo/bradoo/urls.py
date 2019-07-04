@@ -27,5 +27,6 @@ urlpatterns = [
     path('pods', list_pods),
     path('imagens', images_views),
     path('produto', products_views),
+    path('logs', logs_views),
     path('bulk', bulk_update_views)
 ]

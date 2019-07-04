@@ -2,15 +2,17 @@ $('#registry-product').submit(function (event) {
     event.preventDefault(); //prevent default action
     var data = $( this ).serializeArray();
     debugger;
-    var url = "http://127.0.0.1:5000/produto/";
+    var url = "http://18.219.63.233:5000/produto/";
     var typeStr = "POST";
     var productId = $("#produtoId").val();
     var msg = "Produto Cadastrado!"
+    var msgLog = "Criação do Produto: " + $('[name="product"]').val();
 
     if (productId !== "" && productId !== null){
-        url = "http://127.0.0.1:5000/produto/" + productId + "/";
+        url = "http://18.219.63.233:5000/produto/" + productId + "/";
         typeStr = "PUT";
         msg = "Produto Alterado!";
+        msgLog = "";
     }
 
     $.ajax({
@@ -20,6 +22,11 @@ $('#registry-product').submit(function (event) {
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success:function () {
+
+            if (msgLog !== ""){
+                addLog(msgLog);
+            }
+
             $('#createproduct').modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
@@ -57,7 +64,7 @@ $('form[id^="rm-product-"]').submit(function (event) {
     }).then((result) => {
           if (result.value) {
                 $.ajax({
-                        url: "http://127.0.0.1:5000/produto/" + data[0]['value'] + "/",
+                        url: "http://18.219.63.233:5000/produto/" + data[0]['value'] + "/",
                         type: "DELETE",
                         data: data,
                         dataType: "json",
