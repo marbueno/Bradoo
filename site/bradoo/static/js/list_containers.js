@@ -109,7 +109,7 @@ $('#updatebuild').submit(function (event) {
 
             window.setTimeout( function() {
                 window.location.reload();
-              } , 1000);  
+            } , 1000);  
 
         },
         error:function (XMLHttpRequest, textStatus, errorThrown) {
@@ -245,6 +245,7 @@ $('form[id^="back-deployment-"]').submit(function (event) {
 $('form[id^="rm-deployment-"]').submit(function (event) {
     event.preventDefault();
     var data = $( this ).serializeArray();
+    var msgLog = "Exclusão da Instância: " + data[0].value;
     Swal.fire({
       title: 'Deseja remover ?',
       text: "A aplicação sofrera alterações!",
@@ -259,14 +260,20 @@ $('form[id^="rm-deployment-"]').submit(function (event) {
                 type: 'DELETE',
                 url:'http://18.219.63.233:5000/build/'+data[0]['value']+'/',
                 success:function () {
+
+                    if (msgLog !== "") {
+                        addLog(msgLog);
+                    };
+
                     Swal.fire({
                         type: 'success',
                         title: 'Sucesso!',
                         text: 'Remove executado!',
-                    }).then(function () {
-                        window.location.href= '/deployments';
-
                     });
+                            
+                    window.setTimeout( function() {
+                        window.location.reload();
+                    } , 1000);
                 },
                 error:function () {
                     Swal.fire({

@@ -43,6 +43,8 @@
                       <div class="row">
                         <form id="rm-image-{{ image.id }}">
                             <input name="image" value="{{ image.id }}" type="hidden">
+                            <input name="image_tag" value="{{ image.image_tag }}" type="hidden">
+                            <input name="product" value="{{ image.product_name }}" type="hidden">
                             <button class="btn2" id="rm-image-btn"><i class="fa fa-trash"></i></button>
                         </form>
                         <button class="btn2" id="" data-toggle="modal" data-target="#registerimage" onclick="setValuesFields('{{ image.id }}', '{{ image.product }}', '{{ image.url_image }}', '{{ image.image_name }}', '{{ image.image_tag }}', '{{ image.id_mod_bd_prd }}', '{{ image.id_mod_bd_demo }}')"><i class="fa fa-edit"></i></button>

@@ -6,7 +6,7 @@ $('#registry-product').submit(function (event) {
     var typeStr = "POST";
     var productId = $("#produtoId").val();
     var msg = "Produto Cadastrado!"
-    var msgLog = "Criação do Produto: " + $('[name="product"]').val();
+    var msgLog = "Criação do Produto: " + $('#id_product').val();
 
     if (productId !== "" && productId !== null){
         url = "http://18.219.63.233:5000/produto/" + productId + "/";
@@ -53,7 +53,9 @@ $('#registry-product').submit(function (event) {
 $('form[id^="rm-product-"]').submit(function (event) {
     event.preventDefault();
     var data = $( this ).serializeArray();
-        Swal.fire({
+    var msgLog = "Exclusão do Produto: " + data[1].value;
+    
+    Swal.fire({
     title: 'Deseja remover a Produto ?',
     text: "A aplicação sofrera alterações!",
     type: 'warning',
@@ -69,13 +71,21 @@ $('form[id^="rm-product-"]').submit(function (event) {
                         data: data,
                         dataType: "json",
                         success: function () {
+
+                            if (msgLog !== "") {
+                                addLog(msgLog);
+                            };
+
                             Swal.fire({
                                 type:'success',
                                 title:'Sucesso!',
                                 text:'Produto Removida!'
-                            }).then(function () {
-                                window.location.href= '/produto';
                             });
+                            
+                            window.setTimeout( function() {
+                                window.location.reload();
+                            } , 1000);
+
                         },
                         error: function () {
                              Swal.fire({

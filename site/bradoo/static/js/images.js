@@ -1,7 +1,7 @@
 $('#registry-images').submit(function (event) {
     event.preventDefault(); //prevent default action
     var data = $( this ).serializeArray();
-    var msgLog = "Criação da Imagem: " + $('[name="image_name"]').val();
+    var msgLog = "Criação da Imagem: " + $("#product option:selected").text() + " | " + $('#id_image_tag').val();
 
     var id_mod_bd_prd = $('#id_mod_bd_prd').val().toString().replace('C:\\fakepath\\','');
     var id_mod_bd_demo = $('#id_mod_bd_demo').val().toString().replace('C:\\fakepath\\','');
@@ -76,7 +76,6 @@ $('#registry-images').submit(function (event) {
                         text: msg
                     }).then(function () {
                         window.location.href= '/imagens';
-        
                     });
                 },
                 error: function () {
@@ -157,6 +156,7 @@ function onError(error) {
 $('form[id^="rm-image-"]').submit(function (event) {
     event.preventDefault();
     var data = $( this ).serializeArray();
+    var msgLog = "Exclusão da Imagem: " + data[2].value + " | " + data[1].value;
     Swal.fire({
     title: 'Deseja remover a Imagem ?',
     text: "A aplicação sofrera alterações!",
@@ -173,14 +173,20 @@ $('form[id^="rm-image-"]').submit(function (event) {
                     data: data,
                     dataType: "json",
                     success: function () {
+
+                        if (msgLog !== "") {
+                            addLog(msgLog);
+                        };
+
                         Swal.fire({
                             type:'success',
                             title:'Sucesso!',
                             text:'Imagem Removida!'
-                        }).then(function () {
-                            window.location.href= '/imagens';
-
                         });
+
+                        window.setTimeout( function() {
+                            window.location.reload();
+                        } , 1000);  
                     },
                     error: function () {
                          Swal.fire({

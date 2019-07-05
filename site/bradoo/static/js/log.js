@@ -8,7 +8,7 @@ function addLog(action) {
 
     $.ajax({
         type: "POST",
-        url: "http://18.219.63.233:5000/log/",
+        url: "http://127.0.0.1:5000/log/",
         data :  JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
