@@ -104,17 +104,17 @@ def register_build():
         print (data)
 
         # Executa o build de create no jenkins
-        con_j = connect_jenkins()
+        # con_j = connect_jenkins()
 
-        build_id = con_j.get_job_info('Deploy_Odoo')['nextBuildNumber']
+        # build_id = con_j.get_job_info('Deploy_Odoo')['nextBuildNumber']
         
-        con_j.build_job('Deploy_Odoo', data)
+        # con_j.build_job('Deploy_Odoo', data)
 
         # Registra build no banco de dados
         data['date_update'] = [datetime.now()]
 
-        if build_id:
-            data['build_id'] = str(build_id)
+        # if build_id:
+        #     data['build_id'] = str(build_id)
         
         db.builds.insert(data)
         return jsonify({"status": True}), 200
