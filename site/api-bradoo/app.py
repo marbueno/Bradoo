@@ -69,7 +69,7 @@ def scale_pods():
         return jsonify({'status': "error scale!"}), 500
 
 
-@app.route('/log/', methods=["POST"])
+@app.route('/logJenkins/', methods=["POST"])
 def log_pod():
     api_instance = client.CoreV1Api()
     try:
