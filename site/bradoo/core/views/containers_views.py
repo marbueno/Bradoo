@@ -165,6 +165,8 @@ def logs_views(request):
     headers = {'Content-type': 'application/json'}
     logs = requests.get('http://127.0.0.1:5000/log/', headers=headers).json()
 
+    print (logs)
+
     context = {
             "logs": logs
     }

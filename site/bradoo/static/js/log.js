@@ -1,3 +1,34 @@
+
+$(document).ready(function () {
+    carregarLogs();
+});
+
+function carregarLogs() {
+    try {
+        $('#dtLog').dataTable().fnClearTable();
+        $('#dtLog').dataTable().fnDestroy();
+        $('#dtLog').DataTable({
+            "lengthMenu": [[20, -1], [20, "All"]],
+            "ajax": {
+                "type": "GET",
+                "url": 'http://18.219.63.233:5000/log/',
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "user" },
+                { "data": "datetime", type: 'date', targets: 1 },
+                { "data": "action" }
+            ],
+            "order": [[1, "desc"]],
+            "aaSorting": [[1,'desc']],
+        });
+    }
+    catch (ex){
+        console.log(ex);
+    }
+}
+
+
 function addLog(action) {
 
     var data = [];
@@ -8,7 +39,7 @@ function addLog(action) {
 
     $.ajax({
         type: "POST",
-        url: "http://127.0.0.1:5000/log/",
+        url: "http://18.219.63.233:5000/log/",
         data :  JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
