@@ -23,14 +23,10 @@ def deployments_views(request):
         # Request output jenkins
         headers = {'Content-type': 'application/text'}
         headers2 = {'Content-type': 'application/json'}
-        output = []
-        # output = requests.get('http://127.0.0.1:5000/jenkins/output/',
-        #                     headers=headers).text
-        # output = output.split('\n')
 
-        images = requests.get('http://127.0.0.1:5000/image/', headers=headers).json()
-        products = requests.get('http://127.0.0.1:5000/produto/', headers=headers).json()
-        builds = requests.get('http://127.0.0.1:5000/build/', headers=headers2).json()
+        images = requests.get('http://18.219.63.233:5000/image/', headers=headers).json()
+        products = requests.get('http://18.219.63.233:5000/produto/', headers=headers).json()
+        builds = requests.get('http://18.219.63.233:5000/build/', headers=headers2).json()
 
         # deployments = []
         # for deployment in deployments_kubernets.items:
@@ -49,7 +45,7 @@ def deployments_views(request):
         # form createjob
         formJob = JobForm()
         formUpdate = JobFormUpdate()
-        formUpdateImage = ImageFormUpdate
+        formUpdateImage = ImageFormUpdate()
     
     except Exception as ex:
         print (ex)
@@ -74,12 +70,11 @@ def deployments_views(request):
     context = {
         # "deployments": deployments,
         "deployments": builds,
-        "output_jenkins": output,
         "formJob": formJob,
         "formupdate": formUpdate,
         "images": refactor_id(images),
         'products': refactor_id(products),
-        'formupdateimage': formUpdateImage,
+        'formupdateimage': formUpdateImage
     }
     return render(request, 'containers/deployments.html', context)
 

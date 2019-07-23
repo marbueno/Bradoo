@@ -8,27 +8,19 @@
 <div class="container">
 <div class="containLller-fluid">
         <!-- Page Heading -->
-<a href="#" type="button" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#createJob">
+<a href="#" type="button" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#createJob" onclick="resetFields()">
     <span class="icon text-white-50">
         <i class="fas fa-plus "></i>
     </span>
     <span class="text">Criar</span>
 </a>
 
-<a href="#" class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#outputJenkins">
+<a href="#" class="btn btn-info btn-icon-split" onclick="showOutputJenkins()">
     <span class="icon text-white-50">
         <i class="fas fa-info-circle"></i>
     </span>
     <span class="text">Ultimo Log</span>
 </a>
-
-    <!-- <hr />
-
-    Log: {{ log }}
-
-    <hr /> -->
-
-    <!-- {{ deployments }} -->
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -37,60 +29,19 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered" id="dtDeployments" width="100%" cellspacing="0">
                 <thead>
                 <tr>
-                    <th>Produto</th>
-                    <th>Image TAG</th>
-                    <th>Nome instância</th>
-                    <th>CNPJ</th>
-                    <th>Nome / Razão Social</th>
-                    <th>Endereço URL</th>
-                    <th>Status</th>
-                    <th>Ações</th>
+                    <th style="width:9%;">Produto</th>
+                    <th style="width:7%">Image TAG</th>
+                    <th style="width:5%;">Nome instância</th>
+                    <th style="width:13%;">CNPJ</th>
+                    <th style="width:14%;">Razão Social</th>
+                    <th style="width:20%;">Endereço URL</th>
+                    <th style="width:11%;">Status</th>   
+                    <th style="width:23%;">Ações</th>
                 </tr>
                 </thead>
-                <tbody>
-                {% for deployment in deployments %}
-                <tr>
-                    <td>{{ deployment.product_name }}</td>
-                    <td>{{ deployment.image_tag }}</td>
-                    <td>{{ deployment.name }}</td>
-                    <td>{{ deployment.cnpj_cpf }}</td>
-                    <td>{{ deployment.nome_razaosocial }}</td>
-                    <td><a href="http://{{ deployment.name }}.{{ deployment.product_name }}.bradoo.tk" target="_blank">http://{{ deployment.name }}.{{ deployment.product_name }}.bradoo.tk</a></td>
-                    <td>{% if deployment.replicas %}Ativa{% else %}Desativada{% endif %}</td>
-                    <td class="acoes">
-
-                        <div class="row">
-                            &emsp;
-                            <label class="switch" style="margin-top: 3px; margin-bottom: 0; width:30px; height: 16px;" title="Ativo / Desativado">
-                                <input {% if deployment.replicas %}checked{% endif %} type="checkbox" id="switch-{{ deployment.name }}" value="{{ deployment.name }}@@{{ deployment.namespace }}@@{{ deployment.replicas }}">
-                                <span class="slider round"></span>
-                            </label>
-
-                            <form id="rm-deployment-{{ deployment.name  }}">
-                                <input name="deployment" value="{{ deployment.name }}" type="hidden">
-                                <button class="btn2" id="rm-image-btn"  title="Excluir instância"><i class="fa fa-trash"></i></button>
-                            </form>
-                            <button class="btn2" data-toggle="modal" data-target="#updateJob" title="Atualizar Instância" onclick="setValuesFields('{{ deployment.name }}')""><i class="fas fa-sync"></i></button>
-                            <form id="backup-deployment-{{ deployment.name  }}">
-                                <input name="deployment" value="{{ deployment.name }}" type="hidden">
-                                <button class="btn2"><i class="fas fa-search" title="Efetuar Backup"></i></button>
-                            </form>
-
-                            <form id="log-pod-{{ deployment.container_name }}">
-                                <input name="name" value="{{ deployment.container_name }}" type="hidden">
-                                <input name="namespace" value="{{ deployment.namespace }}" type="hidden">
-                                <button class="btn2" title="Visualizar Log"><i class="fas fa-history"></i></button>
-                            </form>
-
-                            <button class="btn2" data-toggle="modal" data-target="#logJob" title="Dados Administrativos" data-toggle="modal" onclick="javascript:showBuildLog('{{ deployment.build_id }}')"><i class="fas fa-user-cog"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
             </table>
         </div>
     </div>
@@ -99,10 +50,10 @@
 
 {% include 'containers/modal_pods.html' %}
 {% include 'containers/modal-build.html' %}
-{% include 'containers/modal-log-build.html' %}
 {% include 'containers/modal-create.html' %}
 {% include 'containers/modal-update.html' %}
-{% include 'pods/modal_log.html' %}
+{% include 'containers/modal_log.html' %}
+{% include 'containers/modal-log-build.html' %}
 
 {% endblock %}
 

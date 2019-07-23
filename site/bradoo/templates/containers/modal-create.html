@@ -12,8 +12,8 @@
                 <form id="createbuild">
                     <div class="form-group">
                         <label>Produto</label>
-                        <select class="form-control" id="product" name="product">
-                            <option value="None" selected="selected" >None</option>
+                        <select class="form-control" id="product" name="product" required>
+                            <option value="" selected="selected" >None</option>
                         {% for product in products %}
                             <option value="{{ product.id }}">{{ product.product }}</option>
                         {% endfor %}
@@ -21,8 +21,8 @@
                     </div>
                     <div class="form-group">
                         <label>Image Tag</label>
-                        <select class="form-control" id="images" name="image">
-                            <option value="None" selected="selected">None</option>
+                        <select class="form-control" id="images" name="image" required>
+                            <option value="" selected="selected">None</option>
                         </select>
                     </div>
                 {{ formJob|bootstrap }}

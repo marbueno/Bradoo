@@ -8,11 +8,71 @@
         </button>
       </div>
       <div class="modal-body">
-          <div id="logBuild"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+          <div id="messageVars"></div>
+          <div id="formVars">
+            <form id="updateVars">
+              <div class="form-group">
+                <input type="hidden" id="idVars" />
+                <label class="control-label" for="id_user_odoo">Login (Usuário Odoo)</label>
+                <div class=" ">
+                  <input type="text" name="user_odoo" class=" form-control" required="" id="id_user_odoo" disabled>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="id_pass_odoo">Senha (Usuário Odoo) -npw</label>
+                <div class="input-group">
+                  <input class="form-control" type="password" id="id_pass_odoo">
+                  <div class="input-group-addon">
+                    <i class="fa fa-eye-slash" aria-hidden="true" id="pass_odoo" style="cursor: pointer;" onclick="showHidePass('pass_odoo');"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="id_pass_admin">Senha Admin -apw</label>
+                <div class="input-group">
+                  <input class="form-control" type="password" id="id_pass_admin">
+                  <div class="input-group-addon">
+                    <i class="fa fa-eye-slash" aria-hidden="true" id="pass_admin" style="cursor: pointer;" onclick="showHidePass('pass_admin');"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="id_db_pass">Senha do Banco</label>
+                <div class="input-group">
+                  <input class="form-control" type="password" id="id_db_pass">
+                  <div class="input-group-addon">
+                    <i class="fa fa-eye-slash" aria-hidden="true" id="db_pass" style="cursor: pointer;" onclick="showHidePass('db_pass');"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="id_dns">DNS</label>
+                <div class=" ">
+                  <a id="href_dns" href="" target="_blank" style="cursor: pointer"><input type="text" name="dns" class=" form-control" required="" id="id_dns" disabled style="cursor: pointer"></a>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary button" id="salvarDadosAdm">Salvar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+              </div>
+            </form>
+          </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+.input-group-addon {
+    padding: .5rem .75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #495057;
+    text-align: center;
+    background-color: #e9ecef;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+}
+</style>

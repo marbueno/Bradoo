@@ -59,9 +59,16 @@ def remove_product(id):
     :return:
     """
     try:
-        db.products.remove({"_id": ObjectId(id)})
-        return jsonify({"status": True}), 200
+        build = db.builds.find_one({"product": str(id) })
+        if build:
+            return jsonify({"status": "-1"}), 404
+        else:
+            db.products.remove({"_id": ObjectId(id)})
+
+            return jsonify({"status": True}), 200
+
     except Exception as ex:
+        print (ex)
         return jsonify({"status": False}), 404
 
 

@@ -188,12 +188,21 @@ $('form[id^="rm-image-"]').submit(function (event) {
                             window.location.reload();
                         } , 1000);  
                     },
-                    error: function () {
-                         Swal.fire({
-                            type: 'error',
-                            title: 'Oops...',
-                            text: "Falha ao remover Imagem!",
-                        });
+                    error: function (ex) {
+                        if (ex.responseJSON.status === "-1"){
+                            Swal.fire({
+                                type: 'error',
+                                title: 'Oops...',
+                                text: "Existe vinculo dessa imagem no cadastro de Instâncias",
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                type: 'error',
+                                title: 'Oops...',
+                                text: "Falha ao remover Imagem!",
+                            });
+                        }
                     }
                 });
     return false;
@@ -252,10 +261,10 @@ $('#update-images').submit(function (event) {
 
 function resetFields(){
     $('#imageId').val('');
-    $("#product option[value=None]").attr('selected', 'selected');
-    $('[name="url_image"]').val();
-    $('[name="image_name"]').val();
-    $('[name="image_tag"]').val();
+    $("#product").val('None');
+    $('[name="url_image"]').val('');
+    $('[name="image_name"]').val('');
+    $('[name="image_tag"]').val('');
     $('#div_mod_bd_prd').html('Nenhum Arquivo Selecionado');
     $('#div_mod_bd_demo').html('Nenhum Arquivo Selecionado');
 }

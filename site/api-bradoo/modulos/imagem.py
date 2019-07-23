@@ -42,7 +42,7 @@ def register_image():
         # data = request.json
         db.images.insert(data)
         return jsonify({"status": True}), 200
-    except Exception as ex:
+    except Exception:
         return jsonify({"status": False}), 400
 
 
@@ -83,9 +83,17 @@ def remove_image(id):
     :return:
     """
     try:
-        db.images.remove({"_id": ObjectId(id)})
-        return jsonify({"status": True}), 200
+
+        build = db.builds.find_one({"image": str(id) })
+        if build:
+            return jsonify({"status": "-1"}), 404
+        else:
+            db.images.remove({"_id": ObjectId(id)})
+
+            return jsonify({"status": True}), 200
+
     except Exception as ex:
+        print (ex)
         return jsonify({"status": False}), 404
 
 @image.route('<string:id>/', methods=["PUT"])

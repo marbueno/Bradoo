@@ -87,12 +87,21 @@ $('form[id^="rm-product-"]').submit(function (event) {
                             } , 1000);
 
                         },
-                        error: function () {
-                             Swal.fire({
-                                type: 'error',
-                                title: 'Oops...',
-                                text: "Falha ao remover Produto!",
-                            });
+                        error: function (ex) {
+                            if (ex.responseJSON.status === "-1"){
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Oops...',
+                                    text: "Existe vinculo desse produto no cadastro de Instâncias",
+                                });
+                            }
+                            else {
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Oops...',
+                                    text: "Falha ao remover Produto!",
+                                });
+                            }
                         }
                     });
           }
@@ -106,4 +115,11 @@ function setValuesFields(id, product, domain, server){
     $('[name="product"]').val(product);
     $('[name="domain"]').val(domain);
     $('[name="server"]').val(server);
+}
+
+function resetFields(){
+    $("#produtoId").val('');
+    $('[name="product"]').val('');
+    $('[name="domain"]').val('');
+    $('[name="server"]').val('');
 }

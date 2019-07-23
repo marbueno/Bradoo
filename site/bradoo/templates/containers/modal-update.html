@@ -24,19 +24,12 @@
                     <select class="form-control" name="image_tagu" id="imagesu">
                     </select>
                   </div>
-
-                  {{ formJob|bootstrap }}
-
-                  <div class="form-group">
-                    <label>Modelo de Banco de Dados</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="typedb" id="typedbuDEMO" value="demo">
-                    <label class="form-check-label" for="typedbuDEMO">Demo</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="typedb" id="typedbuPROD" value="prod">
-                    <label class="form-check-label" for="typedbuPROD">Produção</label>
+                  
+                  <div class="form-group">   
+                    <label class="control-label" for="id_name">Nome da Instância</label>
+                      <div class=" ">
+                        <input type="text" name="name" maxlength="50" class=" form-control" id="id_name" disabled>
+                      </div>
                   </div>
 
                   <div class="modal-footer">

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file
 from pymongo import MongoClient
 from jenkins import Jenkins
 from kubernetes import client, config
@@ -7,11 +7,15 @@ from datetime import datetime
 from bson import ObjectId
 from .worker import *
 import os
+import io
+import glob
+import odoorpc
+import zipfile
 
 
 # Connect mongodb
 # con = MongoClient()
-con = MongoClient(host="localhost",port=27017)
+con = MongoClient()
 db = con['bradoo']
 
 config.load_kube_config()
@@ -96,54 +100,81 @@ def register_build():
     :return:
     """
     try:
-        # formata json recebido
+        msgValidations = ""
+        
+        ## formata json recebido
         data = format_data(request.json)
 
-        print ('BUILD em Andamento')
+        if (not data.get("product")
+        or not data.get("image")
+        or not data.get("name")
+        or not data.get("cnpj_cpf")
+        or not data.get("nome_razaosocial")
+        or not data.get("login")
+        or not data.get("password")
+        or not data.get("typedb")):
+            msgValidations = "Favor informar todos os campos obrigatórios"
+            
+        if not msgValidations:
 
-        print (data)
+            print ('BUILD em Andamento')
 
-        # Executa o build de create no jenkins
-        # con_j = connect_jenkins()
+            # Executa o build de create no jenkins
+            con_j = connect_jenkins()
 
-        # build_id = con_j.get_job_info('Deploy_Odoo')['nextBuildNumber']
-        
-        # con_j.build_job('Deploy_Odoo', data)
+            build_id = con_j.get_job_info('Deploy_Odoo')['nextBuildNumber']
+            
+            con_j.build_job('Deploy_Odoo', data)
 
-        # Registra build no banco de dados
-        data['date_update'] = [datetime.now()]
+            ## Registra build no banco de dados
+            data['date_update'] = [datetime.now()]
 
-        # if build_id:
-        #     data['build_id'] = str(build_id)
-        
-        db.builds.insert(data)
-        return jsonify({"status": True}), 200
+            if build_id:
+                data['build_id'] = str(build_id)
+            
+            db.builds.insert(data)
+            return jsonify({"status": True}), 200
+        else:
+            return jsonify({"Validation": msgValidations}), 406
     except Exception as ex:
-        print (ex)
         return jsonify({"status": False}), 400
 
 @deployment.route('<string:id>/', methods=["PUT"])
 def update_build(id):
     try:
+
+        dataBuild = db.builds.find_one({"_id": ObjectId(id)})
+
+        if dataBuild:
+
+            dataImage = db.images.find_one({"image_tag": dataBuild['image_tag_aux']})
+
+            if dataImage:
+
+                # Registra updatebuild no banco de dados
+                updateBuild = {
+                    # "image_id": str(dataImage['_id']),
+                    "image_tag": dataBuild['image_tag_aux'],
+                    'date_update': datetime.now()
+                }
+
+                db.builds.update({"_id": ObjectId(id)}, {"$set": updateBuild})        
+
+        return jsonify({"status": True}), 200
+    except Exception as ex:
+        print (ex)
+        return jsonify({"status": False}), 400
+
+
+@deployment.route('updateImageTagAux/<string:id>/<string:image_tag>', methods=["PUT"])
+def updateImageTagAux(id, image_tag):
+    try:
         # formata json recebido
         data = format_data(request.json)
-
         print (data)
 
-        # Executa o build de create no jenkins
-        con_j = connect_jenkins()
-        con_j.build_job('Upgrade_Odoo', data)
-
-        # Registra updatebuild no banco de dados
         updateBuild = {
-            "cnpj_cpf": data['cnpj_cpf'],
-            "image_id": data['image_id'],
-            "image_tag": data['image_tag'],
-            "nome_razaosocial": data['nome_razaosocial'],
-            "login": data['login'],
-            'password': data['password'],
-            'typedb': data['typedb'],
-            'date_update': datetime.now()
+            "image_tag_aux": data['image_tag'],
         }
 
         db.builds.update({"_id": ObjectId(id)}, {"$set": updateBuild})
@@ -154,17 +185,39 @@ def update_build(id):
         return jsonify({"status": False}), 400
 
 
-@deployment.route('backup/<string:job_name>/', methods=["POST"])
-def backup_odoo(job_name):
-    try:
-        # executa build de backup do deployment
-        con_j = connect_jenkins()
-        con_j.build_job('Backup_Odoo', {"name": job_name})
-        print('action', job_name)
+@deployment.route('backup/', methods=["POST"])
+def backup_odoo():
 
+    try:
+        data = format_data(request.json)
+
+        print (data)
+
+        # Prepare the connection to the server
+        odoo = odoorpc.ODOO(data['dns'], port=80)
+
+        # Change timeout
+        timeout_backup = odoo.config['timeout']
+        odoo.config['timeout'] = 600    # Timeout set to 10 minutes
+
+        dump = odoo.db.dump('4YDqkVZJhHNs', data['instanceName'])
+        print ("Backup efetuado com sucesso!")
+
+        # Rechange timeout
+        odoo.config['timeout'] = timeout_backup
+        fileN = data['instanceName'] + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.zip'
+        fileName = 'backupfiles/' + fileN
+        zipf = zipfile.ZipFile(fileName, 'w')
+        with open(fileName, 'wb') as dump_zip:
+            dump_zip.write(dump.read())
+
+        zipf.close()
+        
         return jsonify({"status": True}), 200
+
     except Exception as ex:
-        return jsonify({"error": ex}), 500
+        print (ex)
+        return jsonify({"status": False}), 400
 
 
 @deployment.route('log/<string:build_id>/', methods=['GET'])
@@ -178,3 +231,173 @@ def build_log(build_id):
         return info
     except Exception as ex:
         return jsonify({"error": ex}), 500
+
+
+@deployment.route('getBuilds/', methods=["GET"])
+def getBuilds():
+    """
+    Retorna lista dos Builds.
+    :param job_name:
+    :return:
+    """
+    deployments = []
+
+    v1 = client.ExtensionsV1beta1Api()
+    deployments_kubernets = v1.list_deployment_for_all_namespaces()
+
+    for deployment in deployments_kubernets.items:
+        try:
+
+            job = db.builds.find_one({"name": deployment.metadata.name})
+            if job:
+                # result = db.builds.find_one({"name": job_name})
+                job['_id'] = str(job['_id'])
+
+                if job["product"] != "None":
+                    dataProduct = db.products.find_one({"_id": ObjectId(job["product"])})
+
+                    if dataProduct:
+                        job["product_name"] = str(dataProduct["product"])
+
+            job['url'] = ''
+            job['replicas'] = deployment.spec.replicas
+            job['namespace'] = deployment.metadata.namespace
+
+            deployments.append(job)
+
+        except Exception as ex:
+            continue    
+
+    v1_pods = client.CoreV1Api()
+    pods = v1_pods.list_pod_for_all_namespaces(label_selector="app.kubernetes.io/instance", watch=False)
+    pods_aux = pods.items
+
+    for deployment in deployments:
+
+        for pod in pods_aux:
+            try:
+
+                if deployment['name'] == pod.metadata.labels['app.kubernetes.io/instance']:
+                    deployment['pod_name'] = pod.metadata.name
+                    deployment['namespace'] = pod.metadata.namespace
+
+            except Exception as ex:
+                print (ex)
+
+    # Adiciona os registros que estão em construção
+    for jobsEmConstrucao in db.builds.find({ "status": "2" }):
+        jobsEmConstrucao['_id'] = str(jobsEmConstrucao['_id'])
+
+        if jobsEmConstrucao["product"] != "None":
+            dataProduct = db.products.find_one({"_id": ObjectId(jobsEmConstrucao["product"])})
+
+            if dataProduct:
+                jobsEmConstrucao["product_name"] = str(dataProduct["product"])
+
+        deployments.append(jobsEmConstrucao)
+
+    # jobs = list(db.builds.find())
+    # for job in jobs:
+    #     job['_id'] = str(job['_id'])
+    #     job['url'] = ''
+    #     job['replicas'] = 0
+    #     job['pod_name'] = ''
+    #     job['namespace'] = ''
+
+    #     if job["product"] != "None":
+    #         dataProduct = db.products.find_one({"_id": ObjectId(job["product"])})
+    #         if dataProduct:
+    #             job["product_name"] = str(dataProduct["product"])
+
+    #     deployments.append(job)
+
+    return jsonify(deployments), 200
+
+
+@deployment.route('checkBuild/<string:job_name>/', methods=["GET"])
+def checkBuild(job_name=None):
+    """
+    Verifica Status de construção do build no Jenkins.
+    :param job_name:
+    :return:
+    """
+    if job_name:
+
+        try:
+            v1 = client.ExtensionsV1beta1Api()
+            deployments_kubernets = v1.list_deployment_for_all_namespaces()
+        
+            for deployment in deployments_kubernets.items:
+                try:
+                    print (job_name)
+                    print (deployment.spec.replicas)
+
+                    if job_name == deployment.metadata.name:
+                        return jsonify({"replica": deployment.spec.replicas}), 200
+
+                except Exception as ex:
+                    print (ex)
+                    return jsonify({"error": ex}), 500
+        
+        except Exception as ex:
+            print (ex)
+            return jsonify({"error": ex}), 500
+
+        return jsonify({"replica": "-1"}), 200
+
+
+@deployment.route('updateStatus/<string:job_name>/<string:status>/', methods=["PUT"])
+def updateStatus(job_name, status):
+    try:
+
+        # Executa o build de create no jenkins
+        updateStatusBuild = {
+            "status": str(status)
+        }
+
+        db.builds.update({"name": str(job_name) }, {"$set": updateStatusBuild})
+
+        return jsonify({"status": True}), 200
+    except Exception as ex:
+        print (ex)
+        return jsonify({"status": False}), 400
+
+
+@deployment.route('updateJenkins/<string:build_id>/', methods=["PUT"])
+def updateJenkins(build_id):
+    try:
+        print ("Update Jenkins")
+        
+        data = format_data(request.json)
+
+        print (data)
+
+        con_j = connect_jenkins()
+        con_j.build_job('Upgrade_Odoo', data)
+
+        print ("Atualizando Jenkins")
+
+        return jsonify({"status": True}), 200
+    except Exception as ex:
+        print (ex)
+        return jsonify({"status": False}), 400
+
+
+@deployment.route('/download/<string:instanceName>', methods=["GET"])
+def downloadFile (instanceName):
+
+    try:
+        files = glob.glob("backupfiles/" + instanceName + "*.zip")
+        files.sort(key=os.path.getmtime)
+
+        fileDownload = ""
+        for file in files:
+            fileDownload = file
+
+        if fileDownload:
+            return send_file(fileDownload, as_attachment=True, mimetype='application/zip', attachment_filename=instanceName + '.zip')
+        else:
+            return jsonify({"status": False}), 400
+    except Exception as ex:
+        print (ex)
+        return jsonify({"status": False}), 400

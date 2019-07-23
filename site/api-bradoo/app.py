@@ -4,6 +4,7 @@ from jenkins import Jenkins
 from flask_cors import CORS
 from kubernetes import client, config
 from modulos import *
+from modulos.worker import *
 
 
 config.load_kube_config()
@@ -24,6 +25,7 @@ app.register_blueprint(produto)
 app.register_blueprint(image)
 app.register_blueprint(deployment)
 app.register_blueprint(log)
+app.register_blueprint(var_s)
 
 
 # app.register_blueprint(jenkins)
@@ -51,30 +53,36 @@ def last_build():
 
 @app.route('/scale/', methods=["POST"])
 def scale_pods():
-    data = request.form
+    data = format_data(request.json)
     try:
-        for key in data.keys():
-            break
-        scale = key.split('@@')
+        print (data)
 
         v1 = client.AppsV1Api()
-        if int(scale[-1]):
+
+        if int(data['ativar'] == 0):
+            print ('ativar')
             body = {"spec": {"replicas": 0}}
-            v1.patch_namespaced_deployment_scale(name=scale[0], namespace=scale[1], body=body)
+            v1.patch_namespaced_deployment_scale(name=data['name'], namespace=data['namespace'], body=body)
         else:
+            print ('desativar')
             body = {"spec": {"replicas": 1}}
-            v1.patch_namespaced_deployment_scale(name=scale[0], namespace=scale[1], body=body)
+            v1.patch_namespaced_deployment_scale(name=data['name'], namespace=data['namespace'], body=body)
+
         return jsonify({'status': "scale success!"}), 200
-    except Exception:
+    except Exception as ex:
+        print (ex)
         return jsonify({'status': "error scale!"}), 500
 
 
 @app.route('/logJenkins/', methods=["POST"])
 def log_pod():
+
     api_instance = client.CoreV1Api()
     try:
-        data = request.get_json()
-        api_response = api_instance.read_namespaced_pod_log(data['name'], data['namespace'], tail_lines=20, pretty=True)
+        data = format_data(request.json)
+        # api_response = api_instance.read_namespaced_pod_log(data['podName'], data['namespace'], container=data['containerName'], pretty=True, tail_lines=200)
+        api_response = api_instance.read_namespaced_pod_log(data['podName'], data['namespace'], pretty=True, tail_lines=200)
+
         return api_response, 200
     except Exception as e:
         print(e)
