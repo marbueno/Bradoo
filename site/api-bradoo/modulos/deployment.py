@@ -119,6 +119,8 @@ def register_build():
 
             print ('BUILD em Andamento')
 
+            data['name'] = data['name'].lower()
+
             # Executa o build de create no jenkins
             con_j = connect_jenkins()
 
@@ -151,14 +153,24 @@ def update_build(id):
 
             if dataImage:
 
-                # Registra updatebuild no banco de dados
-                updateBuild = {
-                    # "image_id": str(dataImage['_id']),
-                    "image_tag": dataBuild['image_tag_aux'],
-                    'date_update': datetime.now()
-                }
+                if dataBuild['image_tag_aux'] == "online-error":
+                    var = db.vars.find_one({"Nome da Instancia": dataBuild['name']})
 
-                db.builds.update({"_id": ObjectId(id)}, {"$set": updateBuild})        
+                    if var:
+                        updateImageTagBuild = {
+                            "image_tag": var['tag'],
+                            "date_update": datetime.now()
+                        }
+                        db.builds.update({"name": dataBuild['name']}, {"$set": updateImageTagBuild})
+                else:
+
+                    # Registra updatebuild no banco de dados
+                    updateBuild = {
+                        "image_tag": dataBuild['image_tag_aux'],
+                        "date_update": datetime.now()
+                    }
+
+                    db.builds.update({"_id": ObjectId(id)}, {"$set": updateBuild})        
 
         return jsonify({"status": True}), 200
     except Exception as ex:
@@ -274,6 +286,16 @@ def getBuilds():
 
     for deployment in deployments:
 
+        if deployment['image_tag'] == "online-error":
+            var = db.vars.find_one({"Nome da Instancia": deployment['name']})
+
+            if var:
+                updateImageTagBuild = {
+                    "image_tag": var['tag']
+                }
+                db.builds.update({"name": deployment['name']}, {"$set": updateImageTagBuild})
+
+
         for pod in pods_aux:
             try:
 
@@ -329,7 +351,7 @@ def checkBuild(job_name=None):
         
             for deployment in deployments_kubernets.items:
                 try:
-                    print (job_name)
+                    print (job_name + ' | ' + deployment.metadata.name)
                     print (deployment.spec.replicas)
 
                     if job_name == deployment.metadata.name:

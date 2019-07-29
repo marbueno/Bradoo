@@ -129,7 +129,7 @@ $("#createbuild").submit(function (event) {
     event.preventDefault();
     debugger;
     var data = $( this ).serializeArray();
-    var jobName = $('#id_name').val();
+    var jobName = $('#id_name').val().toLowerCase();
     var firstChar = jobName.charAt(0);
     var isValidJobName = true;
     try {
@@ -547,7 +547,7 @@ function setValuesFields(name){
                     resultImage.forEach(itemImage => {
                         if (itemImage.product === result.product){
 
-                            if (itemImage._id === result.image)
+                            if (itemImage.image_tag === result.image_tag)
                                 $("#imagesu").append('<option value="' + itemImage._id + '" selected>' + itemImage.image_tag + '</option>');
                             else
                                 $("#imagesu").append('<option value="' + itemImage._id + '">' + itemImage.image_tag + '</option>');
@@ -597,6 +597,7 @@ function atualizarLog() {
 function resetFields() {
     $('#productu').val('0');
     $('[name="name"]').val('');
+    $('[name="name"]').css("text-transform", "lowercase");
     $('[name="cnpj_cpf"]').val('');
     $('[name="nome_razaosocial"]').val('');
     $('[name="login"]').val('');
@@ -720,12 +721,7 @@ function checkBuild(item){
                                     }
                                 });
                             }
-                            dtDeployments.ajax.reload();
-                            
-                            // window.setTimeout( function() {
-                            //     $("#btnDadosAdm" + item.instanceName).click();
-                            // } , 3000);
-                            
+                            dtDeployments.ajax.reload();                            
                         }
                     });
                 }
