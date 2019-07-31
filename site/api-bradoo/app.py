@@ -61,12 +61,15 @@ def scale_pods():
 
         if int(data['ativar'] == 0):
             print ('ativar')
-            body = {"spec": {"replicas": 0}}
-            v1.patch_namespaced_deployment_scale(name=data['name'], namespace=data['namespace'], body=body)
+            body = {'spec': {'replicas': 0}}
+            result = v1.patch_namespaced_deployment_scale(name=data['name'], namespace=data['namespace'], body=body)
+
+            print (result)
         else:
             print ('desativar')
-            body = {"spec": {"replicas": 1}}
-            v1.patch_namespaced_deployment_scale(name=data['name'], namespace=data['namespace'], body=body)
+            body = {'spec': {'replicas': 1}}
+            result = v1.patch_namespaced_deployment_scale(name=data['name'], namespace=data['namespace'], body=body)
+            print (result)
 
         return jsonify({'status': "scale success!"}), 200
     except Exception as ex:
@@ -90,4 +93,4 @@ def log_pod():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5000, host='127.0.0.1')
+    app.run(debug=False, port=5000, host='0.0.0.0')

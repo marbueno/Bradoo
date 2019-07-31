@@ -13,12 +13,8 @@ def refactor_id(data: list) -> list:
 config.load_kube_config()
 
 def deployments_views(request):
-    log = []
 
     try:
-        # Request deployments
-        # v1 = client.ExtensionsV1beta1Api()
-        # deployments_kubernets = v1.list_deployment_for_all_namespaces()
 
         # Request output jenkins
         headers = {'Content-type': 'application/text'}
@@ -27,20 +23,6 @@ def deployments_views(request):
         images = requests.get('http://18.219.63.233:5000/image/', headers=headers).json()
         products = requests.get('http://18.219.63.233:5000/produto/', headers=headers).json()
         builds = requests.get('http://18.219.63.233:5000/build/', headers=headers2).json()
-
-        # deployments = []
-        # for deployment in deployments_kubernets.items:
-        #     try:
-
-        #         deploy = requests.get('http://127.0.0.1:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
-
-        #         deploy['replicas'] = deployment.spec.replicas
-        #         deploy['namespace'] = deployment.metadata.namespace
-
-        #         deployments.append(deploy)
-
-        #     except Exception as ex:
-        #         continue
 
         # form createjob
         formJob = JobForm()
@@ -51,24 +33,7 @@ def deployments_views(request):
         print (ex)
 
 
-
-    # v1_pods = client.CoreV1Api()
-    # pods = v1_pods.list_pod_for_all_namespaces(label_selector="app.kubernetes.io/instance", watch=False)
-    # pods_aux = pods.items;
-    
-    # for deployment in deployments:
-    #     for pod in pods_aux:
-    #         try:
-
-    #             if deployment['name'] == pod.metadata.labels['app.kubernetes.io/instance']:
-    #                 deployment['container_name'] = pod.metadata.name
-    #                 deployment['namespace'] = pod.metadata.namespace
-
-    #         except Exception as ex:
-    #             print (ex)
-
     context = {
-        # "deployments": deployments,
         "deployments": builds,
         "formJob": formJob,
         "formupdate": formUpdate,
@@ -84,8 +49,8 @@ def images_views(request):
     formUpdate = ImageFormUpdate
     headers = {'Content-Type': 'application/json'}
 
-    images = requests.get('http://127.0.0.1:5000/image/', headers=headers).json()
-    products = requests.get('http://127.0.0.1:5000/produto/', headers=headers).json()
+    images = requests.get('http://18.219.63.233:5000/image/', headers=headers).json()
+    products = requests.get('http://18.219.63.233:5000/produto/', headers=headers).json()
 
     context = {
         'form': form,
@@ -111,7 +76,7 @@ def list_pods(request):
 
 def products_views(request):
     headers = {'Content-Type': 'application/json'}
-    products = requests.get('http://127.0.0.1:5000/produto/', headers=headers).json()
+    products = requests.get('http://18.219.63.233:5000/produto/', headers=headers).json()
 
     context = {
         'formproduct': ProductForm,
@@ -134,7 +99,7 @@ def bulk_update_views(request):
         deployments = []
         for deployment in deployments_kubernets.items:
             try:
-                deploy = requests.get('http://127.0.0.1:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
+                deploy = requests.get('http://18.219.63.233:5000/build/' + deployment.metadata.name + '/', headers=headers).json()
 
                 deploy['replicas'] = deployment.spec.replicas
                 deploy['namespace'] = deployment.metadata.namespace
@@ -158,7 +123,7 @@ def logs_views(request):
 
     # Request Pods
     headers = {'Content-type': 'application/json'}
-    logs = requests.get('http://127.0.0.1:5000/log/', headers=headers).json()
+    logs = requests.get('http://18.219.63.233:5000/log/', headers=headers).json()
 
     print (logs)
 

@@ -44,8 +44,8 @@ function carregarDeployments() {
                         mRender: function (data, type, row)
                         {
                             var status = ""
-                            if (row.status === "0") status = "Desativada"
-                            if (row.status === "1") status = "Ativa"
+                            if (row.status === "0" || row.replicas === 0) status = "Desativada"
+                            if (row.status === "1" && row.replicas === 1) status = "Ativa"
                             if (row.status === "2" || row.status === "3") { 
 
                                 if (row.status === "2") status = "Em Construção";
@@ -71,18 +71,23 @@ function carregarDeployments() {
                         mRender: function (data, type, row)
                         {
                             var replicaChecked = ''
+                            var ativarDesativar = row.replicas;
                             var actionsHTML = ''
 
                             if (row.status === "0" || row.status === "1") {
 
-                                if (row.status === "1") {
+                                if (ativarDesativar === 1) {
                                     replicaChecked = 'checked'
+                                    ativarDesativar = 0
+                                }
+                                else {
+                                    ativarDesativar = 1
                                 }
 
                                 actionsHTML += '<div class="row">';
                                 actionsHTML += '&emsp;';
                                 actionsHTML += '    <label class="switch" style="margin-top: 3px; margin-bottom: 0; width:30px; height: 16px;" title="Ativo / Desativado">';
-                                actionsHTML += '        <input ' + replicaChecked + ' type="checkbox" onclick="ativarDesativarInstancia(\'' + row.name + '\',\'' + row.namespace + '\',' + row.status + ')" >'
+                                actionsHTML += '        <input ' + replicaChecked + ' type="checkbox" onclick="ativarDesativarInstancia(\'' + row.name + '\',\'' + row.namespace + '\',' + ativarDesativar + ')" >'
                                 actionsHTML += '        <span class="slider round"></span>'
                                 actionsHTML += '    </label>'
 
@@ -288,9 +293,9 @@ function ativarDesativarInstancia (instanceName, nameSpace, ativarDesativar) {
     
     var msgLog = instanceName;
     if (ativarDesativar === 1)
-        msgLog = "Instância Desativada: " + msgLog;
-    else
         msgLog = "Instância Ativada: " + msgLog;
+    else
+        msgLog = "Instância Desativada: " + msgLog;
 
     Swal.fire({
         title: 'Deseja scalar ?',

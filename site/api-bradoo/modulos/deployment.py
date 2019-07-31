@@ -119,7 +119,7 @@ def register_build():
 
             print ('BUILD em Andamento')
 
-            data['name'] = data['name'].lower()
+            data['name'] = str(data['name']).lower()
 
             # Executa o build de create no jenkins
             con_j = connect_jenkins()
@@ -318,21 +318,6 @@ def getBuilds():
 
         deployments.append(jobsEmConstrucao)
 
-    # jobs = list(db.builds.find())
-    # for job in jobs:
-    #     job['_id'] = str(job['_id'])
-    #     job['url'] = ''
-    #     job['replicas'] = 0
-    #     job['pod_name'] = ''
-    #     job['namespace'] = ''
-
-    #     if job["product"] != "None":
-    #         dataProduct = db.products.find_one({"_id": ObjectId(job["product"])})
-    #         if dataProduct:
-    #             job["product_name"] = str(dataProduct["product"])
-
-    #     deployments.append(job)
-
     return jsonify(deployments), 200
 
 
@@ -345,27 +330,48 @@ def checkBuild(job_name=None):
     """
     if job_name:
 
-        try:
-            v1 = client.ExtensionsV1beta1Api()
-            deployments_kubernets = v1.list_deployment_for_all_namespaces()
+        var = db.vars.find_one({"Nome da Instancia": job_name})
+
+        if var:
+
+            build = db.builds.find_one({"name": job_name})
+
+            if build:
+                if build['status'] == "3" and var['tag'] != build['image_tag_aux']:
+                    return jsonify({"replica": -1}), 200
+                else:
+                    if build['status'] == "3" and var['tag'] == build['image_tag_aux'] and var['Status'] == 'stable':
+                        return jsonify({"replica": 1}), 200
+                    else:
+                        if build['status'] == "2" and var['Status'] == 'stable':
+                            return jsonify({"replica": 1}), 200
+                        else:
+                            return jsonify({"replica": -1}), 200
+
+        else:
+            return jsonify({"replica": -1}), 200
+
+        # try:
+        #     v1 = client.ExtensionsV1beta1Api()
+        #     deployments_kubernets = v1.list_deployment_for_all_namespaces()
         
-            for deployment in deployments_kubernets.items:
-                try:
-                    print (job_name + ' | ' + deployment.metadata.name)
-                    print (deployment.spec.replicas)
+        #     for deployment in deployments_kubernets.items:
+        #         try:
+        #             print (job_name + ' | ' + deployment.metadata.name)
+        #             print (deployment.spec.replicas)
 
-                    if job_name == deployment.metadata.name:
-                        return jsonify({"replica": deployment.spec.replicas}), 200
+        #             if job_name == deployment.metadata.name:
+        #                 return jsonify({"replica": deployment.spec.replicas}), 200
 
-                except Exception as ex:
-                    print (ex)
-                    return jsonify({"error": ex}), 500
+        #         except Exception as ex:
+        #             print (ex)
+        #             return jsonify({"error": ex}), 500
         
-        except Exception as ex:
-            print (ex)
-            return jsonify({"error": ex}), 500
+        # except Exception as ex:
+        #     print (ex)
+        #     return jsonify({"error": ex}), 500
 
-        return jsonify({"replica": "-1"}), 200
+        # return jsonify({"replica": "-1"}), 200
 
 
 @deployment.route('updateStatus/<string:job_name>/<string:status>/', methods=["PUT"])

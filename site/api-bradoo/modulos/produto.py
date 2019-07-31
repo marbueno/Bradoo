@@ -5,7 +5,7 @@ from .worker import *
 
 
 # Connect mongodb
-con = MongoClient(host="localhost",port=27017)
+con = MongoClient()
 db = con['bradoo']
 
 # create blueprint
