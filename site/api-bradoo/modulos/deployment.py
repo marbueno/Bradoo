@@ -337,10 +337,10 @@ def checkBuild(job_name=None):
             build = db.builds.find_one({"name": job_name})
 
             if build:
-                if build['status'] == "3" and var['tag'] != build['image_tag_aux']:
+                if build['status'] == "3" and var['tag'] != build['image_tag_aux'] and build['image_tag_aux'] != "online-error":
                     return jsonify({"replica": -1}), 200
                 else:
-                    if build['status'] == "3" and var['tag'] == build['image_tag_aux'] and var['Status'] == 'stable':
+                    if build['status'] == "3" and (var['tag'] == build['image_tag_aux'] or build['image_tag_aux'] == "online-error") and var['Status'] == 'stable':
                         return jsonify({"replica": 1}), 200
                     else:
                         if build['status'] == "2" and var['Status'] == 'stable':
@@ -350,29 +350,6 @@ def checkBuild(job_name=None):
 
         else:
             return jsonify({"replica": -1}), 200
-
-        # try:
-        #     v1 = client.ExtensionsV1beta1Api()
-        #     deployments_kubernets = v1.list_deployment_for_all_namespaces()
-        
-        #     for deployment in deployments_kubernets.items:
-        #         try:
-        #             print (job_name + ' | ' + deployment.metadata.name)
-        #             print (deployment.spec.replicas)
-
-        #             if job_name == deployment.metadata.name:
-        #                 return jsonify({"replica": deployment.spec.replicas}), 200
-
-        #         except Exception as ex:
-        #             print (ex)
-        #             return jsonify({"error": ex}), 500
-        
-        # except Exception as ex:
-        #     print (ex)
-        #     return jsonify({"error": ex}), 500
-
-        # return jsonify({"replica": "-1"}), 200
-
 
 @deployment.route('updateStatus/<string:job_name>/<string:status>/', methods=["PUT"])
 def updateStatus(job_name, status):
