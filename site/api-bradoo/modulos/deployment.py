@@ -275,7 +275,8 @@ def getBuilds():
             job['replicas'] = deployment.spec.replicas
             job['namespace'] = deployment.metadata.namespace
 
-            deployments.append(job)
+            if not any(d['name'] == deployment.metadata.name for d in deployments):
+                deployments.append(job)
 
         except Exception as ex:
             continue    
@@ -316,7 +317,8 @@ def getBuilds():
             if dataProduct:
                 jobsEmConstrucao["product_name"] = str(dataProduct["product"])
 
-        deployments.append(jobsEmConstrucao)
+        if not any(d['name'] == jobsEmConstrucao['name'] for d in deployments):
+            deployments.append(jobsEmConstrucao)
 
     return jsonify(deployments), 200
 
