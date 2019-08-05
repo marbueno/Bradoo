@@ -235,7 +235,6 @@ $('#updatebuild').submit(function (event) {
 
     var produto = $("#productu option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
     data.push({ name: "produto", value: produto});
-    // var msgLog = "Atualização da Instância: " + $('#id_name').val();
 
     images.forEach(itemImage => {
         if (itemImage._id === $("#imagesu").val()){
@@ -259,10 +258,6 @@ $('#updatebuild').submit(function (event) {
                 contentType: "application/json; charset=utf-8",
                 datatype: "json",
                 success:function () {
-
-                    // if (msgLog !== ""){
-                    //     addLog(msgLog);
-                    // }
 
                     window.setTimeout( function() {
                         window.location.reload();

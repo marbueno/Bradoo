@@ -43,15 +43,23 @@ def build_rollback(job_name):
 @deployment.route('<string:job_name>/', methods=["DELETE"])
 def build_destroy(job_name):
     try:
-        # Executa build para destruir deployment
-        con_j = connect_jenkins()
-        con_j.build_job('Destroy_Odoo', {"name": job_name})
 
-        # Guarda um historico de builds removidos do banco de dados
-        db.buildsdeath.insert(db.builds.find_one({"name": job_name}))
-        db.builds.remove({"name": job_name})
+        build = db.builds.find_one({"name": job_name})
 
-        return jsonify({"status": True}), 200
+        if build:
+
+            # Executa build para destruir deployment
+            con_j = connect_jenkins()
+            con_j.build_job('Destroy_Odoo', {"name": build['name'], "produto": build['produto']})
+
+            # Guarda um historico de builds removidos do banco de dados
+            db.buildsdeath.insert(build)
+            db.builds.remove({"name": job_name})
+
+            return jsonify({"status": True}), 200
+        else:
+            return jsonify({"status": False}), 400
+
     except Exception as ex:
         return jsonify({"error": ex}), 500
 
@@ -186,10 +194,18 @@ def updateImageTagAux(id, image_tag):
         print (data)
 
         updateBuild = {
-            "image_tag_aux": data['image_tag'],
+            "image_tag_aux": data['image_tag']
         }
 
         db.builds.update({"_id": ObjectId(id)}, {"$set": updateBuild})
+
+        build = db.builds.find_one({"_id": ObjectId(id)})
+
+        if build:
+            updateStatus = {
+                "Status": "update"
+            }
+            db.vars.update({"Nome da Instancia": build['name']}, {"$set": updateStatus})
 
         return jsonify({"status": True}), 200
     except Exception as ex:
@@ -335,21 +351,10 @@ def checkBuild(job_name=None):
         var = db.vars.find_one({"Nome da Instancia": job_name})
 
         if var:
-
-            build = db.builds.find_one({"name": job_name})
-
-            if build:
-                if build['status'] == "3" and var['tag'] != build['image_tag_aux'] and build['image_tag_aux'] != "online-error":
-                    return jsonify({"replica": -1}), 200
-                else:
-                    if build['status'] == "3" and (var['tag'] == build['image_tag_aux'] or build['image_tag_aux'] == "online-error") and var['Status'] == 'stable':
-                        return jsonify({"replica": 1}), 200
-                    else:
-                        if build['status'] == "2" and var['Status'] == 'stable':
-                            return jsonify({"replica": 1}), 200
-                        else:
-                            return jsonify({"replica": -1}), 200
-
+            if var['Status'] == 'update':
+                return jsonify({"replica": -1}), 200
+            else:
+                return jsonify({"replica": 1}), 200
         else:
             return jsonify({"replica": -1}), 200
 
