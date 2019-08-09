@@ -235,7 +235,7 @@ $('#updatebuild').submit(function (event) {
     data.push({ name: "produto", value: produto});
 
     images.forEach(itemImage => {
-        if (itemImage._id === $("#imagesu").val()){
+        if (itemImage._id === $("#imagesu").val()) {
             data.push({ name: "image_id", value: itemImage._id});
             data.push({ name: "name", value: build.name});
             data.push({ name: "url_image", value: itemImage.url_image});
