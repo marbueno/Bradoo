@@ -6,50 +6,43 @@
 {% block  body %}
 <div class="container">
 <div class="containLller-fluid">
-        <!-- Page Heading -->
-<a href="#" type="button" class="btn btn-warning btn-icon-split" data-toggle="modal" data-target="#createJob">
+
+    <a href="#" type="button" class="btn btn-warning btn-icon-split" id="updateJobs">
     <span class="icon text-white-50">
         <i class="fas fa-spinner"></i>
     </span>
     <span class="text">Atualizar</span>
 </a>
-
-    <!-- DataTales Example -->
     <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Lista de Projetos</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Lista de Projetos</h6>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered" id="dtDeployments" width="100%" cellspacing="0">
                 <thead>
                 <tr>
-                    <th></th>
-                    <th>Produto</th>
-                    <th>Image TAG</th>
-                    <th>Nome da instância</th>
-                    <th>CNPJ</th>
-                    <th>Endereço da URL</th>
-                    <th>Status</th>
+                    <th style="width:2%; padding-left: 30px;">Selecionar</th>
+                    <th style="width:9%;">Produto</th>
+                    <th style="width:7%">Image TAG</th>
+                    <th style="width:5%;">Nome instância</th>
+                    <th style="width:13%;">CNPJ</th>
+                    <th style="width:14%;">Nome Cliente</th>
+                    <th style="width:10%;">Endereço URL</th>
+                    <th style="width:11%;">Status</th>
                 </tr>
                 </thead>
-                <tbody>
-                {% for deployment in deployments %}
-                <tr>
-                    <td style="padding: 0px 0px 20px 38px"><input type="checkbox" class="form-check-input" id="exampleCheck1"></td>
-                    <td>{{ deployment.product }}</td>
-                    <td>{{ deployment.image_tag }}</td>
-                    <td>{{ deployment.name }}</td>
-                    <td></td>
-                    <td>{{ deployment.url_image }}</td>
-                    <td></td>
-                </tr>
-                {% endfor %}
-                </tbody>
             </table>
         </div>
     </div>
-    </div>
-<!-- EndDataTales -->
 </div>
+
+{% include 'bulk_update/bulk-update.html' %}
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/bulk_update.js' %}"></script>
+    <script src="{% static 'js/jquery.serializejson.min.js' %}"></script>
+    <script src="{% static 'js/log.js' %}"></script>
 {% endblock %}

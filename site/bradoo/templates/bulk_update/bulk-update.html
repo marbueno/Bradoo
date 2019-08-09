@@ -1,0 +1,36 @@
+{% load bootstrap %}
+<div class="modal fade" id="bulkUpdate" tabindex="-1" role="dialog" aria-labelledby="updateJobLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateJobLabel">Atualizar Instância(s)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+              <form id="updatebuild">
+                  <div class="form-group">
+                    <label>Produto</label>
+                    <select class="form-control" name="productu" id="productu" disabled>
+                      {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.product }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Image Tag</label>
+                    <select class="form-control" name="image_tagu" id="imagesu">
+                    </select>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button class="btn btn-primary button">Atualizar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                  </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>

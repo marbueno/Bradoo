@@ -52,6 +52,8 @@ $('#registry-images').submit(function (event) {
                 msg = "Imagem Alterada!";
             }
 
+            var productName = $("#product option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+            data.push({ name: "produto", value: productName});
             data.push({name: "id_mod_bd_prd", value: id_mod_bd_prd});
             data.push({name: "id_mod_bd_demo", value: id_mod_bd_demo});
                 
@@ -62,6 +64,8 @@ $('#registry-images').submit(function (event) {
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
                 success:function () {
+
+                    Swal.close();
 
                     if (msgLog !== ""){
                         addLog(msgLog);
@@ -119,6 +123,14 @@ function uploadFiles(fileNames) {
 
         if (fileNames[0] !== "" || fileNames[1] !== "") {
 
+            Swal.fire({
+                title: 'Estamos efetuando o upload dos arquivos!',
+                html: 'Por favor aguarde alguns segundos ...',
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+            });
+
             if (fileNames[0] !== undefined && fileNames[0] !== "")
                 formData.append(fileNames[0], fileInputPRD.get(0).files[0]);
 
@@ -129,7 +141,7 @@ function uploadFiles(fileNames) {
                 url: "http://18.219.63.233:5000/image/uploadFile",
                 type: "POST",
                 data: formData,
-                async: false,
+                async: true,
                 contentType: false,
                 processData: false,
                 success: function(data) {

@@ -16,6 +16,7 @@ function carregarDeployments() {
             $('#dtDeployments').dataTable().fnClearTable();
             $('#dtDeployments').dataTable().fnDestroy();
             dtDeployments = $('#dtDeployments').DataTable({
+                "scrollX": true,
                 "lengthMenu": [[20, -1], [20, "All"]],
                 "ajax": {
                     "type": "GET",
@@ -52,14 +53,19 @@ function carregarDeployments() {
                                 if (row.status === "3") status = "Em Atualização";
 
                                 if (buildsToCheck.length === 0){
-                                    buildsToCheck.push({ id: row._id, instanceName: row.name, productName: row.product_name, status: row.status });
+                                    buildsToCheck.push({ id: row._id, instanceName: row.name, cnpj: row.cnpj_cpf, productName: row.product_name, image_tag: row.image_tag, image_tag_aux: row.image_tag_aux, status: row.status });
                                 }
                                 else {
 
+                                    var isAdded = false;
+                                    
                                     buildsToCheck.forEach(item => {
-                                        if (item.instanceName !== row.name)
-                                            buildsToCheck.push({ id: row._id, instanceName: row.name, productName: row.product_name, status: row.status });
+                                        if (item.instanceName === row.name)
+                                            isAdded = true;
                                     });
+
+                                    if (isAdded === false)
+                                        buildsToCheck.push({ id: row._id, instanceName: row.name, cnpj: row.cnpj_cpf, productName: row.product_name, image_tag: row.image_tag, image_tag_aux: row.image_tag_aux, status: row.status });
                                 }
                             }
 
@@ -84,7 +90,7 @@ function carregarDeployments() {
                                     ativarDesativar = 1
                                 }
 
-                                actionsHTML += '<div class="row">';
+                                actionsHTML += '<div class="row" style="width: 190px !important;">';
                                 actionsHTML += '&emsp;';
                                 actionsHTML += '    <label class="switch" style="margin-top: 3px; margin-bottom: 0; width:30px; height: 16px;" title="Ativo / Desativado">';
                                 actionsHTML += '        <input ' + replicaChecked + ' type="checkbox" onclick="ativarDesativarInstancia(\'' + row.name + '\',\'' + row.namespace + '\',' + ativarDesativar + ')" >'
@@ -95,7 +101,7 @@ function carregarDeployments() {
 
                                 actionsHTML += '    <button class="btn2" data-toggle="modal" data-target="#updateJob" title="Atualizar Instância" onclick="setValuesFields(\'' + row.name + '\')"><i class="fas fa-sync"></i></button>';
 
-                                actionsHTML += '    <button class="btn2"><i class="fas fa-search" title="Efetuar Backup" onclick="doBackup(\'' + row.name + '\',\'' + row.product_name + '\')"></i></button>';
+                                actionsHTML += '    <button class="btn2" title="Efetuar Backup" onclick="doBackup(\'' + row.name + '\',\'' + row.product_name + '\')"><i class="fas fa-search"></i></button>';
 
                                 actionsHTML += '    <button class="btn2" title="Visualizar Log" onclick="visualizarLog(\'' + row.pod_name + '\',\'' + row.namespace + '\',\'' + row.name + '\')"><i class="fas fa-history"></i></button>';
 
@@ -110,6 +116,10 @@ function carregarDeployments() {
                         }
                     }
                 ],
+                "columnDefs":
+                [
+                    { "width": "100px !important", "targets": [7] }
+                ],
                 "order": [[1, "desc"]],
                 "aaSorting": [[1,'desc']],
 
@@ -120,7 +130,7 @@ function carregarDeployments() {
                     });
 
                     resolve(true);
-                }            
+                }
             });
         }
         catch (ex){
@@ -135,6 +145,8 @@ $("#createbuild").submit(function (event) {
     debugger;
     var data = $( this ).serializeArray();
     var jobName = $('#id_name').val().toLowerCase();
+    var cnpj = $('#id_cnpj_cpf').val();
+    var image_tag = '';
     var firstChar = jobName.charAt(0);
     var isValidJobName = true;
     try {
@@ -166,11 +178,12 @@ $("#createbuild").submit(function (event) {
         data.push({ name: "produto", value: productName});
         data.push({ name: "userpass", value: data[6].value});
         data.push({ name: "status", value: "2"});
-        var msgLog = "Criação da Instância: " + $('#id_name').val();
+        var msgLog = "Criação da Instância: " + jobName;
 
         images.forEach(itemImage => {
             if (itemImage._id === $("#images").val()){
-                data.push({ name: "image_tag", value: itemImage.image_tag});
+                image_tag = itemImage.image_tag;
+                data.push({ name: "image_tag", value: image_tag});
                 data.push({ name: "url_image", value: itemImage.url_image});
                 data.push({ name: "image_name", value: itemImage.image_name});
 
@@ -192,7 +205,7 @@ $("#createbuild").submit(function (event) {
             success:function (data, textStatus, XmlHttpRequest) {
 
                 if (msgLog !== ""){
-                    addLog(msgLog);
+                    addLog(msgLog, jobName, cnpj, productName, image_tag, null, "Em Construção");
                 }
 
                 $('#createJob').modal('hide');
@@ -216,7 +229,7 @@ $("#createbuild").submit(function (event) {
                     Swal.fire({
                         type:'error',
                         title: 'Oops...',
-                        text:'Falha ao executar o build!'
+                        text:'Falha ao criar o build!'
                     });
                 }
             
@@ -235,6 +248,7 @@ $('#updatebuild').submit(function (event) {
 
     var produto = $("#productu option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
     data.push({ name: "produto", value: produto});
+    data.push({ name: "image_tag_old", value: build.image_tag});
 
     images.forEach(itemImage => {
         if (itemImage._id === $("#imagesu").val()){
@@ -246,10 +260,13 @@ $('#updatebuild').submit(function (event) {
         }
     });
 
+    var image_tag_aux = data[6].value;
+    var msgLog = "Atualização da Instância: " + build.name;
+
     updateJenkins(data).then( r => {
         if (r === true){
 
-            var url = 'http://18.219.63.233:5000/build/updateImageTagAux/' + build._id + '/' + data[6].value;
+            var url = 'http://18.219.63.233:5000/build/updateImageTagAux/' + build._id + '/' + image_tag_aux;
 
             $.ajax({
                 type: "PUT",
@@ -258,6 +275,10 @@ $('#updatebuild').submit(function (event) {
                 contentType: "application/json; charset=utf-8",
                 datatype: "json",
                 success:function () {
+
+                    if (msgLog !== "") {
+                        addLog(msgLog, build.name, build.cnpj_cpf, build.produto, build.image_tag, image_tag_aux, "Em Atualização");
+                    }
 
                     window.setTimeout( function() {
                         window.location.reload();
@@ -269,7 +290,7 @@ $('#updatebuild').submit(function (event) {
                     Swal.fire({
                         type:'error',
                         title: 'Oops...',
-                        text:'Falha ao executar o build!'
+                        text:'Falha ao atualizar o build!'
                     });
 
                 }
@@ -278,7 +299,7 @@ $('#updatebuild').submit(function (event) {
     });
 });
 
-function ativarDesativarInstancia (instanceName, nameSpace, ativarDesativar) {
+function ativarDesativarInstancia(instanceName, nameSpace, ativarDesativar) {
     debugger;
 
     var data = [];
@@ -409,12 +430,15 @@ function deleteDeployment(instanceName) {
 
 function downloadFile(instanceName){
     let link = document.createElement('a');
+    link.setAttribute("type", "hidden");
     link.href = 'http://18.219.63.233:5000/build/download/' + instanceName;
     link.download = instanceName + ".zip";
+    document.body.appendChild(link);
     link.click();
+    link.remove();
 }
 
-function doBackup (instanceName, productName) {
+function doBackup(instanceName, productName) {
 
     var data = [];
     var dns = instanceName + "." + productName + ".bradoo.tk"
@@ -423,7 +447,6 @@ function doBackup (instanceName, productName) {
 
     Swal.fire({
       title: 'Deseja realizar Backup ?',
-      text: "A aplicação sofrera alterações!",
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -454,6 +477,16 @@ function doBackup (instanceName, productName) {
                         text:'Falha ao realizar o Backup'
                     });
                 }
+            });
+
+
+            Swal.fire({
+                title: 'Estamos preparando o backup!',
+                html: 'Por favor aguarde alguns segundos ...',
+                timer: 15000,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
             });
         }
     });
@@ -575,10 +608,16 @@ function visualizarLog(podName, nameSpace, containerName) {
         type: "POST",
         contentType: "application/json; charset=utf-8",
         success: function (result) {
+            
+            Swal.close();
+            
             $('#logPod').modal('show');
             $('#contextlog').text(result);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
+            
+            Swal.close();
+
             Swal.fire({
                 type: 'error',
                 title: 'Oops...',
@@ -586,6 +625,14 @@ function visualizarLog(podName, nameSpace, containerName) {
             });
         }
     })
+
+    Swal.fire({
+        title: 'Carregando Log!',
+        html: 'Essa tarefa pode demorar alguns minutos ...',
+        onBeforeOpen: () => {
+            Swal.showLoading()
+        }
+    });    
 };
 
 function atualizarLog() {
@@ -633,23 +680,6 @@ function showOutputJenkins(lenOutputJenkins){
     })
 }
 
-function addDeployment() {
-
-    debugger;
-    var objDep =
-    {
-        "product_name": $("#product option:selected").text(),
-        "image_tag": $("#images option:selected").text(),
-        "name": $("#id_name").val(),
-        "cnpj_cpf": $("#id_cnpj_cpf").val(),
-        "nome_razaosocial": $("#id_nome_razaosocial").val(),
-        "url": "http://",
-        "status": "2",
-    };
-
-    $('#dtDeployments').DataTable().row.add(objDep).draw(false);
-}
-
 function updateStatus(jobName, status) {
     
     return new Promise(function (resolve, reject) {
@@ -689,6 +719,14 @@ function checkBuild(item){
                             resolve(true);
                             buildsToCheck = [];
 
+                            if (item.status === "2"){
+                                var msgLog = "Criação da Instância: " + item.instanceName;
+
+                                if (msgLog !== ""){
+                                    addLog(msgLog, item.instanceName, item.cnpj, item.productName, item.image_tag, null, "Ativo");
+                                }
+                            }
+
                             if (item.status === "3"){
                                 
                                 var url = 'http://18.219.63.233:5000/build/' + item.id + "/";
@@ -703,7 +741,7 @@ function checkBuild(item){
                                     success:function () {
                     
                                         if (msgLog !== ""){
-                                            addLog(msgLog);
+                                            addLog(msgLog, item.instanceName, item.cnpj, item.productName, item.image_tag, item.image_tag_aux, "Ativo");
                                         }
                     
                                         window.setTimeout( function() {
@@ -738,22 +776,6 @@ function checkBuild(item){
             }
         })
     });
-}
-
-function getRowByIntanceName(instanceName)
-{
-    debugger;
-
-    var row = null;
-    $("#dtDeployments tr:not(:first)").each(function ()
-    {
-        if (instanceName == $(this).find("td:nth-child(3)").text())
-        {
-            row = this;
-        }
-    });
-
-    return row;
 }
 
 function doUpdateBuild(data){
@@ -819,6 +841,7 @@ function showHidePass(controlName) {
 };
 
 $('#updateVars').submit(function (event) {
+    event.preventDefault();
     debugger;
 
     var data = [];
@@ -831,10 +854,10 @@ $('#updateVars').submit(function (event) {
     $.ajax({
         type: "PUT",
         url: url,
-        data :  JSON.stringify(data),
+        data: JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
         datatype: "json",
-        success:function () {
+        success: function() {
 
             Swal.fire({
                 type: 'success',
@@ -844,12 +867,12 @@ $('#updateVars').submit(function (event) {
             })
 
         },
-        error:function (XMLHttpRequest, textStatus, errorThrown) {
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log(errorThrown);
             Swal.fire({
                 type:'error',
                 title: 'Oops...',
-                text:'Falha ao executar o build!'
+                text:'Falha ao atualizar os dados administrativos!'
             });
         }
     });

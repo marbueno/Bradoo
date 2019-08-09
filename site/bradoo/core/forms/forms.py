@@ -3,7 +3,7 @@ from django import forms
 class JobForm(forms.Form):
     name = forms.CharField(label="Nome da Instância", max_length=50, required=True, error_messages={'required': 'Please enter your name'})
     cnpj_cpf = forms.CharField(label="CNPJ", max_length=18, required=True, error_messages={'required': 'Please enter your name'})
-    nome_razaosocial = forms.CharField(label="Nome ou Razão Social", max_length=100, required=True, error_messages={'required': 'Please enter your name'})
+    nome_razaosocial = forms.CharField(label="Nome Cliente", max_length=100, required=True, error_messages={'required': 'Please enter your name'})
     login = forms.CharField(label="Login (Usuário Odoo)", max_length=30, required=True, error_messages={'required': 'Please enter your name'})
     password = forms.CharField(label="Senha (Usuário Odoo)", widget=forms.PasswordInput, max_length=20, required=True, error_messages={'required': 'Please enter your name'})
 
