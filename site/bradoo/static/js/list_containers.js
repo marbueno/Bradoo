@@ -35,7 +35,8 @@ function carregarDeployments() {
                         {
                             var url = ""
                             if (row.url === "" && row.status === "1")
-                                url = "<a href='http://" + row.name + "." + row.product_name + ".bradoo.tk' target='_blank'>http://" + row.name + "." + row.product_name + ".bradoo.tk</a>"
+                                // url = "<a href='http://" + row.name + "." + row.product_name + ".bradoo.tk' target='_blank'>http://" + row.name + "." + row.product_name + ".bradoo.tk</a>"
+                                url = "<a href='http://" + row.name + ".app.vantes.com.br' target='_blank'>http://" + row.name + "app.vantes.com.br</a>"
 
                             return url;
                         }
@@ -441,7 +442,7 @@ function downloadFile(instanceName){
 function doBackup(instanceName, productName) {
 
     var data = [];
-    var dns = instanceName + "." + productName + ".bradoo.tk"
+    var dns = instanceName + ".app.vantes.com.br"
     data.push({name: "instanceName", value: instanceName});
     data.push({name: "dns", value: dns});
 
@@ -497,7 +498,7 @@ function showDadosAdministrativos(instanceName, productName) {
 
     debugger;
 
-    var url = "http://" + instanceName + "." + productName + ".bradoo.tk"
+    var url = "http://" + instanceName + ".app.vantes.com.br"
 
     $('#idVars').val("");
     $('#id_user_odoo').val("");
