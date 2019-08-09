@@ -13,10 +13,10 @@ log = Blueprint('log', __name__, url_prefix='/log/')
 
 @log.route('', methods=["POST"])
 def registry_log():
+
     """
     Registro de log no banco de dados.
 
-    :return:
     """
     try:
         data = request.json
@@ -25,7 +25,7 @@ def registry_log():
 
         db.log.insert(data)
         return jsonify({"status": True}), 200
-    except Exception as ex:
+    except Exception:
         return jsonify({"status": False}), 400
 
 
@@ -35,12 +35,29 @@ def list_log():
     """
     Busca do Log.
 
-    :param id:
-    :return:
     """
 
     data = db.log.find().sort("datetime", -1)
     data = list(data)
     for x in data:
         x["_id"] = str(x['_id'])
+
+        if not x.get("instancename"):
+            x['instancename'] = ''
+
+        if not x.get("cnpj"):
+            x['cnpj'] = ''
+
+        if not x.get("produto"):
+            x['produto'] = ''
+
+        if not x.get("image_tag_origem"):
+            x['image_tag_origem'] = ''
+
+        if not x.get("image_tag_destino"):
+            x['image_tag_destino'] = ''
+
+        if not x.get("status"):
+            x['status'] = ''
+
     return jsonify(data)

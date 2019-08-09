@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from pymongo import MongoClient
+from jenkins import Jenkins
 from bson import ObjectId
 from .worker import *
 import io
@@ -16,6 +17,10 @@ db = con['bradoo']
 image = Blueprint('image', __name__, url_prefix='/image/')
 
 baseFilePath = os.path.abspath('')
+
+def connect_jenkins():
+    con = Jenkins('http://18.219.63.233:8080/', username='vitorlavor', password='1149e0e4346bb060c9b277d6294080fdc4')
+    return con
 
 
 @image.route('', methods=["POST"])
@@ -34,11 +39,16 @@ def register_image():
         if id_mod_bd_prd != '':
             id_mod_bd_prd = baseFilePath + '/filesUploaded/' + id_mod_bd_prd
             data['id_mod_bd_prd'] = id_mod_bd_prd
+            data['pathdb_prd'] = id_mod_bd_prd
 
         if id_mod_bd_demo != '':
             id_mod_bd_demo = baseFilePath + '/filesUploaded/' + id_mod_bd_demo
             data['id_mod_bd_demo'] = id_mod_bd_demo
+            data['pathdb_demo'] = id_mod_bd_demo
 
+        con_j = connect_jenkins()
+        con_j.build_job('Create_Product', data)
+    
         # data = request.json
         db.images.insert(data)
         return jsonify({"status": True}), 200

@@ -50,7 +50,7 @@ def build_destroy(job_name):
 
             # Executa build para destruir deployment
             con_j = connect_jenkins()
-            con_j.build_job('Destroy_Odoo', {"name": build['name'], "produto": build['produto']})
+            con_j.build_job('Destroy_Odoo', {"name": build['name'], "produto": build['produto'], "typedb": build['typedb']})
 
             # Guarda um historico de builds removidos do banco de dados
             db.buildsdeath.insert(build)

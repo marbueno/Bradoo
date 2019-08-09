@@ -84,7 +84,7 @@ def log_pod():
     try:
         data = format_data(request.json)
         # api_response = api_instance.read_namespaced_pod_log(data['podName'], data['namespace'], container=data['containerName'], pretty=True, tail_lines=200)
-        api_response = api_instance.read_namespaced_pod_log(data['podName'], data['namespace'], pretty=True, tail_lines=200)
+        api_response = api_instance.read_namespaced_pod_log(data['podName'], data['namespace'], pretty=True)
 
         return api_response, 200
     except Exception as e:
