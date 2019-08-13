@@ -45,7 +45,7 @@ function carregarDeployments() {
                             var url = ""
                             if (row.url === "" && row.status === "1")
                                 // url = "<a href='http://" + row.name + "." + row.product_name + ".bradoo.tk' target='_blank'>http://" + row.name + "." + row.product_name + ".bradoo.tk</a>"
-                                url = "<a href='http://" + row.name + ".app.vantes.com.br' target='_blank'>http://" + row.name + "app.vantes.com.br</a>"
+                                url = "<a href='http://" + row.name + ".app.vantes.com.br' target='_blank'>http://" + row.name + ".app.vantes.com.br</a>"
 
                             return url;
                         }
@@ -230,26 +230,29 @@ $('#updatebuild').submit(function (event) {
     debugger;
 
     event.preventDefault();
-    var data = $( this ).serializeArray();
 
     var produto = $("#productu option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
-    data.push({ name: "produto", value: produto});
-
-    images.forEach(itemImage => {
-        if (itemImage._id === $("#imagesu").val()) {
-            data.push({ name: "image_id", value: itemImage._id});
-            data.push({ name: "name", value: build.name});
-            data.push({ name: "url_image", value: itemImage.url_image});
-            data.push({ name: "image_name", value: itemImage.image_name});
-            data.push({ name: "image_tag", value: itemImage.image_tag});
-        }
-    });
 
     var iCount = 0;
 
     buildsToUpdate.forEach(buildItem => {
 
+        var data = [];
+
+        data = $( this ).serializeArray();
+        data.push({ name: "produto", value: produto});
+
         var build = getBuildByName(buildItem[1].value);
+
+        images.forEach(itemImage => {
+            if (itemImage._id === $("#imagesu").val()) {
+                data.push({ name: "image_id", value: itemImage._id});
+                data.push({ name: "name", value: build.name});
+                data.push({ name: "url_image", value: itemImage.url_image});
+                data.push({ name: "image_name", value: itemImage.image_name});
+                data.push({ name: "image_tag", value: itemImage.image_tag});
+            }
+        });
         
         data.push({ name: "image_tag_old", value: build.image_tag});
 

@@ -228,12 +228,12 @@ def backup_odoo():
         timeout_backup = odoo.config['timeout']
         odoo.config['timeout'] = 600    # Timeout set to 10 minutes
 
-        dump = odoo.db.dump('4YDqkVZJhHNs', data['instanceName'])
+        dump = odoo.db.dump('4YDqkVZJhHNs', data['dbname'])
         print ("Backup efetuado com sucesso!")
 
         # Rechange timeout
         odoo.config['timeout'] = timeout_backup
-        fileN = data['instanceName'] + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.zip'
+        fileN = data['dbname'] + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.zip'
         fileName = 'backupfiles/' + fileN
         zipf = zipfile.ZipFile(fileName, 'w')
         with open(fileName, 'wb') as dump_zip:

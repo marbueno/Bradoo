@@ -36,7 +36,7 @@ function carregarDeployments() {
                             var url = ""
                             if (row.url === "" && row.status === "1")
                                 // url = "<a href='http://" + row.name + "." + row.product_name + ".bradoo.tk' target='_blank'>http://" + row.name + "." + row.product_name + ".bradoo.tk</a>"
-                                url = "<a href='http://" + row.name + ".app.vantes.com.br' target='_blank'>http://" + row.name + "app.vantes.com.br</a>"
+                                url = "<a href='http://" + row.name + ".app.vantes.com.br' target='_blank'>http://" + row.name + ".app.vantes.com.br</a>"
 
                             return url;
                         }
@@ -102,7 +102,7 @@ function carregarDeployments() {
 
                                 actionsHTML += '    <button class="btn2" data-toggle="modal" data-target="#updateJob" title="Atualizar Instância" onclick="setValuesFields(\'' + row.name + '\')"><i class="fas fa-sync"></i></button>';
 
-                                actionsHTML += '    <button class="btn2" title="Efetuar Backup" onclick="doBackup(\'' + row.name + '\',\'' + row.product_name + '\')"><i class="fas fa-search"></i></button>';
+                                actionsHTML += '    <button class="btn2" title="Efetuar Backup" onclick="doBackup(\'' + row.name + '\',\'' + row.product_name + '\',\'' + row.typedb + '\')"><i class="fas fa-search"></i></button>';
 
                                 actionsHTML += '    <button class="btn2" title="Visualizar Log" onclick="visualizarLog(\'' + row.pod_name + '\',\'' + row.namespace + '\',\'' + row.name + '\')"><i class="fas fa-history"></i></button>';
 
@@ -439,11 +439,12 @@ function downloadFile(instanceName){
     link.remove();
 }
 
-function doBackup(instanceName, productName) {
+function doBackup(instanceName, productName, typedb) {
 
     var data = [];
     var dns = instanceName + ".app.vantes.com.br"
-    data.push({name: "instanceName", value: instanceName});
+    var dbname = instanceName + productName + typedb;
+    data.push({name: "dbname", value: dbname});
     data.push({name: "dns", value: dns});
 
     Swal.fire({
