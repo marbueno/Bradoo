@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from pymongo import MongoClient
+from jenkins import Jenkins
 from bson import ObjectId
 from .worker import *
 
@@ -11,6 +12,10 @@ db = con['bradoo']
 # create blueprint
 produto = Blueprint('produto', __name__, url_prefix='/produto/')
 
+def connect_jenkins():
+    con = Jenkins('http://18.219.63.233:8080/', username='vitorlavor', password='1149e0e4346bb060c9b277d6294080fdc4')
+    return con
+
 @produto.route('', methods=["POST"])
 def registry_product():
     """
@@ -21,9 +26,16 @@ def registry_product():
     try:
         data = request.json
         data = format_data(data)
+        data['produto'] = data['product']
+        data['dominio'] = data['domain']
+
+        con_j = connect_jenkins()
+        con_j.build_job('Create_Domain', data)
+
         db.products.insert(data)
+
         return jsonify({"status": True}), 201
-    except Exception as ex:
+    except Exception:
         return jsonify({"status": False}), 400
 
 

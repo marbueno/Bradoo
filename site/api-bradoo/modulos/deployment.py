@@ -110,6 +110,8 @@ def register_build():
     try:
         msgValidations = ""
         
+        print (request.json)
+
         ## formata json recebido
         data = format_data(request.json)
 
@@ -128,6 +130,11 @@ def register_build():
             print ('BUILD em Andamento')
 
             data['name'] = str(data['name']).lower()
+
+            dataProduct = db.products.find_one({"_id": ObjectId(data["product"])})
+
+            if dataProduct:
+                data["dominio"] = dataProduct["domain"]
 
             # Executa o build de create no jenkins
             con_j = connect_jenkins()
@@ -286,6 +293,7 @@ def getBuilds():
 
                     if dataProduct:
                         job["product_name"] = str(dataProduct["product"])
+                        job["product_domain"] = str(dataProduct["domain"])
 
             job['url'] = ''
             job['replicas'] = deployment.spec.replicas
