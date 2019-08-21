@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from jenkins import Jenkins
 from kubernetes import client, config
 from datetime import datetime
+from .log import LogAudit
 
 from bson import ObjectId
 from .worker import *
@@ -11,57 +12,59 @@ import io
 import glob
 import odoorpc
 import zipfile
-
+import re
 
 # Connect mongodb
-# con = MongoClient()
 con = MongoClient()
 db = con['bradoo']
 
 config.load_kube_config()
-def connect_jenkins():
-    con = Jenkins('http://18.219.63.233:8080/', username='vitorlavor', password='1149e0e4346bb060c9b277d6294080fdc4')
-    return con
+
 
 # create blueprint
 deployment = Blueprint('', __name__, url_prefix='/build/')
 
-@deployment.route('rollback/<string:job_name>/', methods=['POST'])
-def build_rollback(job_name):
+
+def connect_jenkins():
+    con = Jenkins('http://18.219.63.233:8080/', username='vitorlavor', password='1149e0e4346bb060c9b277d6294080fdc4')
+    return con
+
+
+def validate_build(data):
+    
     try:
-        # executa build de rollback do deployment
-        con_j = connect_jenkins()
-        con_j.build_job('Rollback_Odoo', {"name": job_name, "value": "last"})
+        msgValidations = ""
 
-        print(job_name)
-
-        return jsonify({"status": True}), 200
-    except Exception as ex:
-        return jsonify({"error": ex}), 500
-
-
-@deployment.route('<string:job_name>/', methods=["DELETE"])
-def build_destroy(job_name):
-    try:
-
-        build = db.builds.find_one({"name": job_name})
-
-        if build:
-
-            # Executa build para destruir deployment
-            con_j = connect_jenkins()
-            con_j.build_job('Destroy_Odoo', {"name": build['name'], "produto": build['produto'], "typedb": build['typedb']})
-
-            # Guarda um historico de builds removidos do banco de dados
-            db.buildsdeath.insert(build)
-            db.builds.remove({"name": job_name})
-
-            return jsonify({"status": True}), 200
+        if (not data.get("product_name")
+            or not data.get("image_tag")
+            or not data.get("name")
+            or not data.get("cnpj_cpf")
+            or not data.get("nome_razaosocial")
+            or not data.get("login")
+            or not data.get("password")
+            or not data.get("typedb")):
+                msgValidations = "Favor informar todos os campos obrigatórios"
         else:
-            return jsonify({"status": False}), 400
+            jobName = data['name']
+            try:
+                firstChar = jobName[:1]
+
+                if (int(firstChar) >= 0 and int(firstChar) <= 9):
+                    msgValidations = "O Nome da Instância não pode iniciar com números!"
+            except Exception:
+                msgValidations = ""
+
+            if msgValidations == "":
+                regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+                if (not regex.search(jobName) == None):
+                    msgValidations = "O Nome da Instância não pode conter caracteres especiais!"
 
     except Exception as ex:
-        return jsonify({"error": ex}), 500
+        msgValidations = "Erro ao validar instância: " + ex
+
+    print (msgValidations)
+
+    return msgValidations
 
 
 @deployment.route('', methods=["GET"])
@@ -99,7 +102,6 @@ def consult_build(job_name=None):
 
         return jsonify(jobs), 200
 
-
 @deployment.route('', methods=["POST"])
 def register_build():
     """
@@ -108,35 +110,42 @@ def register_build():
     :return:
     """
     try:
-        msgValidations = ""
+        data = request.json
+
+        print (data)
+
+        msgValidations = validate_build(data)
         
-        print (request.json)
-
-        ## formata json recebido
-        data = format_data(request.json)
-
-        if (not data.get("product")
-        or not data.get("image")
-        or not data.get("name")
-        or not data.get("cnpj_cpf")
-        or not data.get("nome_razaosocial")
-        or not data.get("login")
-        or not data.get("password")
-        or not data.get("typedb")):
-            msgValidations = "Favor informar todos os campos obrigatórios"
-            
         if not msgValidations:
 
-            print ('BUILD em Andamento')
+            print ('Build em Andamento...')
 
-            data['name'] = str(data['name']).lower()
-
-            dataProduct = db.products.find_one({"_id": ObjectId(data["product"])})
+            ## Dados do Produto
+            dataProduct = db.products.find_one({"product": data["product_name"]})
 
             if dataProduct:
+                data["product"] = str(dataProduct["_id"])
+                data["produto"] = dataProduct["product"]
                 data["dominio"] = dataProduct["domain"]
 
-            # Executa o build de create no jenkins
+            ## Dados do Produto
+            dataImage = db.images.find_one({"image_tag": data["image_tag"]})
+
+            if dataImage:
+                data["image"] = str(dataImage["_id"])
+                data["url_image"] = dataImage["url_image"]
+                data["image_name"] = dataImage["image_name"]
+                if (data["typedb"] == "demo"):
+                    data["pathdb"] = dataImage["id_mod_bd_demo"]
+                else:
+                    data["pathdb"] = dataImage["id_mod_bd_prd"]
+
+            ## Dados da Instância
+            data["name"] = str(data["name"]).lower()
+            data["userpass"] = data["password"]
+            data["status"] = "2" ## Em Construção
+
+            # Executa o build de create no Jenkins
             con_j = connect_jenkins()
 
             build_id = con_j.get_job_info('Deploy_Odoo')['nextBuildNumber']
@@ -150,10 +159,29 @@ def register_build():
                 data['build_id'] = str(build_id)
             
             db.builds.insert(data)
+
+            user = "api"
+            if data.get("user"):
+                user = data['user']
+            
+            dataLog = {}
+            dataLog["user"] = user
+            dataLog["action"] = "Criação da Instância: " + data["name"]
+            dataLog["instancename"] = data["name"]
+            dataLog["cnpj"] = data["cnpj_cpf"]
+            dataLog["produto"] = data["produto"]
+            dataLog["image_tag_origem"] = data["image_tag"]
+            dataLog["image_tag_destino"] = ""
+            dataLog["status"] = "Em Construção"
+
+            LogAudit().addLog(dataLog)
+
             return jsonify({"status": True}), 200
         else:
             return jsonify({"Validation": msgValidations}), 406
+
     except Exception as ex:
+        print (ex)
         return jsonify({"status": False}), 400
 
 @deployment.route('<string:id>/', methods=["PUT"])
@@ -219,6 +247,29 @@ def updateImageTagAux(id, image_tag):
         print (ex)
         return jsonify({"status": False}), 400
 
+
+@deployment.route('<string:job_name>/', methods=["DELETE"])
+def build_destroy(job_name):
+    try:
+
+        build = db.builds.find_one({"name": job_name})
+
+        if build:
+
+            # Executa build para destruir deployment
+            con_j = connect_jenkins()
+            con_j.build_job('Destroy_Odoo', {"name": build['name'], "produto": build['produto'], "typedb": build['typedb']})
+
+            # Guarda um historico de builds removidos do banco de dados
+            db.buildsdeath.insert(build)
+            db.builds.remove({"name": job_name})
+
+            return jsonify({"status": True}), 200
+        else:
+            return jsonify({"status": False}), 400
+
+    except Exception as ex:
+        return jsonify({"error": ex}), 500
 
 @deployment.route('backup/', methods=["POST"])
 def backup_odoo():

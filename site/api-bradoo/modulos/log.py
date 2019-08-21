@@ -3,13 +3,19 @@ from pymongo import MongoClient
 from datetime import datetime
 from .worker import *
 
-
 # Connect mongodb
 con = MongoClient()
 db = con['bradoo']
 
 # create blueprint
 log = Blueprint('log', __name__, url_prefix='/log/')
+
+class LogAudit(): 
+    def addLog(self, data):
+        print ('Inserindo Log')
+        print (data)
+        data['datetime'] = [datetime.now()]
+        db.log.insert(data)
 
 @log.route('', methods=["POST"])
 def registry_log():

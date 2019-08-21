@@ -144,10 +144,8 @@ function carregarDeployments() {
 $("#createbuild").submit(function (event) {
     event.preventDefault();
     debugger;
-    var data = $( this ).serializeArray();
+    var data = $( this ).serializeObject();
     var jobName = $('#id_name').val().toLowerCase();
-    var cnpj = $('#id_cnpj_cpf').val();
-    var image_tag = '';
     var firstChar = jobName.charAt(0);
     var isValidJobName = true;
     try {
@@ -175,26 +173,11 @@ $("#createbuild").submit(function (event) {
     }
 
     if (isValidJobName) {
-        var productName = $("#product option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
-        data.push({ name: "produto", value: productName});
-        data.push({ name: "userpass", value: data[6].value});
-        data.push({ name: "status", value: "2"});
-        var msgLog = "Criação da Instância: " + jobName;
+        var product_name = $("#product option:selected").text().toLowerCase().replace(' ', '').replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+        var image_tag = $("#images option:selected").text();
 
-        images.forEach(itemImage => {
-            if (itemImage._id === $("#images").val()){
-                image_tag = itemImage.image_tag;
-                data.push({ name: "image_tag", value: image_tag});
-                data.push({ name: "url_image", value: itemImage.url_image});
-                data.push({ name: "image_name", value: itemImage.image_name});
-
-                if($('#typedbDEMO').is(':checked'))
-                    data.push({ name: "pathdb", value: itemImage.id_mod_bd_demo});
-
-                if($('#typedbPROD').is(':checked'))
-                    data.push({ name: "pathdb", value: itemImage.id_mod_bd_prd});
-            }
-        });
+        data.product_name = product_name;
+        data.image_tag = image_tag;
 
         var url = 'http://18.219.63.233:5000/build/';
         $.ajax({
@@ -204,10 +187,6 @@ $("#createbuild").submit(function (event) {
             contentType: "application/json; charset=utf-8",
             datatype: "json",
             success:function (data, textStatus, XmlHttpRequest) {
-
-                if (msgLog !== ""){
-                    addLog(msgLog, jobName, cnpj, productName, image_tag, null, "Em Construção");
-                }
 
                 $('#createJob').modal('hide');
                 $('body').removeClass('modal-open');
