@@ -231,7 +231,7 @@ $('#updatebuild').submit(function (event) {
     data.push({ name: "image_tag_old", value: build.image_tag});
 
     images.forEach(itemImage => {
-        if (itemImage._id === $("#imagesu").val()){
+        if (itemImage._id === $("#imagesu").val()) {
             data.push({ name: "image_id", value: itemImage._id});
             data.push({ name: "name", value: build.name});
             data.push({ name: "url_image", value: itemImage.url_image});
@@ -240,7 +240,7 @@ $('#updatebuild').submit(function (event) {
         }
     });
 
-    var image_tag_aux = data[6].value;
+    var image_tag_aux = data[7].value;
     var msgLog = "Atualização da Instância: " + build.name;
 
     updateJenkins(data).then( r => {
