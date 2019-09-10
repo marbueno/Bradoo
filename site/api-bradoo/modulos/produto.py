@@ -26,6 +26,9 @@ def registry_product():
     try:
         data = request.json
         data = format_data(data)
+
+        print (data)
+
         data['produto'] = data['product']
         data['dominio'] = data['domain']
 
