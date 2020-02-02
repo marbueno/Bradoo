@@ -20,7 +20,7 @@ function carregarDeployments() {
                 "lengthMenu": [[20, -1], [20, "All"]],
                 "ajax": {
                     "type": "GET",
-                    "url": 'http://18.219.63.233:5000/build/getBuilds/',
+                    "url": 'http://177.190.150.12:5000/build/getBuilds/',
                     "dataSrc": ""
                 },
                 "columns": [
@@ -179,7 +179,7 @@ $("#createbuild").submit(function (event) {
         data.product_name = product_name;
         data.image_tag = image_tag;
 
-        var url = 'http://18.219.63.233:5000/build/';
+        var url = 'http://177.190.150.12:5000/build/';
         $.ajax({
             type: "POST",
             url: url,
@@ -246,7 +246,7 @@ $('#updatebuild').submit(function (event) {
     updateJenkins(data).then( r => {
         if (r === true){
 
-            var url = 'http://18.219.63.233:5000/build/updateImageTagAux/' + build._id + '/' + image_tag_aux;
+            var url = 'http://177.190.150.12:5000/build/updateImageTagAux/' + build._id + '/' + image_tag_aux;
 
             $.ajax({
                 type: "PUT",
@@ -305,7 +305,7 @@ function ativarDesativarInstancia(instanceName, nameSpace, ativarDesativar) {
         if (result.value) {
             $.ajax({
                 type: 'POST',
-                url:'http://18.219.63.233:5000/scale/',
+                url:'http://177.190.150.12:5000/scale/',
                 data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 success:function () {
@@ -344,7 +344,7 @@ $("#product").focusout(function () {
     $('#images').children('option:not(:first)').remove();
     $.ajax({
         type: "GET",
-        url: "http://18.219.63.233:5000/image/",
+        url: "http://177.190.150.12:5000/image/",
         datatype: "json",
         success: function (result) {
             images = result;
@@ -374,7 +374,7 @@ function deleteDeployment(instanceName) {
         if (result.value) {
             $.ajax({
                 type: 'DELETE',
-                url:'http://18.219.63.233:5000/build/' + instanceName + '/',
+                url:'http://177.190.150.12:5000/build/' + instanceName + '/',
                 success:function () {
 
                     if (msgLog !== "") {
@@ -411,7 +411,7 @@ function deleteDeployment(instanceName) {
 function downloadFile(instanceName){
     let link = document.createElement('a');
     link.setAttribute("type", "hidden");
-    link.href = 'http://18.219.63.233:5000/build/download/' + instanceName;
+    link.href = 'http://177.190.150.12:5000/build/download/' + instanceName;
     link.download = instanceName + ".zip";
     document.body.appendChild(link);
     link.click();
@@ -439,7 +439,7 @@ function doBackup(instanceName, productName, typedb) {
             $.ajax({
                 type: 'POST',
                 data: JSON.stringify(data),
-                url:'http://18.219.63.233:5000/build/backup/',
+                url:'http://177.190.150.12:5000/build/backup/',
                 contentType: "application/json; charset=utf-8",
                 datatype: "json",
                 success:function () {
@@ -504,7 +504,7 @@ function showDadosAdministrativos(instanceName, productName) {
 
         $.ajax({
             type: "GET",
-            url: "http://18.219.63.233:5000/vars/" + instanceName,
+            url: "http://177.190.150.12:5000/vars/" + instanceName,
             datatype: "json",
             success: function (result) {
 
@@ -542,7 +542,7 @@ function setValuesFields(name){
 
     $.ajax({
         type: "GET",
-        url: "http://18.219.63.233:5000/build/" + name + '/',
+        url: "http://177.190.150.12:5000/build/" + name + '/',
         datatype: "json",
         success: function (result) {
 
@@ -553,7 +553,7 @@ function setValuesFields(name){
     
             $.ajax({
                 type: "GET",
-                url: "http://18.219.63.233:5000/image/",
+                url: "http://177.190.150.12:5000/image/",
                 datatype: "json",
                 success: function (resultImage) {
                     images = resultImage;
@@ -582,7 +582,7 @@ function visualizarLog(podName, nameSpace, containerName) {
     data.push({name: "containerName", value: containerName});
     dataLog = data;
     $('#contextlog').text('Atualizando...');
-    var url = 'http://18.219.63.233:5000/logJenkins/';
+    var url = 'http://177.190.150.12:5000/logJenkins/';
     $.ajax({
         url: url,
         data:JSON.stringify(data),
@@ -643,7 +643,7 @@ function showOutputJenkins(lenOutputJenkins){
 
     var lenOutputJenkinsAux = lenOutputJenkins
 
-    var url = 'http://18.219.63.233:5000/jenkins/output/';
+    var url = 'http://177.190.150.12:5000/jenkins/output/';
     $.ajax({
         url: url,
         type: "GET",
@@ -664,7 +664,7 @@ function showOutputJenkins(lenOutputJenkins){
 function updateStatus(jobName, status) {
     
     return new Promise(function (resolve, reject) {
-        var url = 'http://18.219.63.233:5000/build/updateStatus/' + jobName + '/' + status + '/';
+        var url = 'http://177.190.150.12:5000/build/updateStatus/' + jobName + '/' + status + '/';
         
         $.ajax({
             url: url,
@@ -686,7 +686,7 @@ function checkBuild(item){
     return new Promise(function (resolve, reject) {
 
         debugger;
-        var url = 'http://18.219.63.233:5000/build/checkBuild/' + item.instanceName + '/';
+        var url = 'http://177.190.150.12:5000/build/checkBuild/' + item.instanceName + '/';
 
         $.ajax({
             url: url,
@@ -710,7 +710,7 @@ function checkBuild(item){
 
                             if (item.status === "3"){
                                 
-                                var url = 'http://18.219.63.233:5000/build/' + item.id + "/";
+                                var url = 'http://177.190.150.12:5000/build/' + item.id + "/";
                                 var msgLog = "Atualização da Instância: " + item.instanceName;
 
                                 $.ajax({
@@ -764,7 +764,7 @@ function doUpdateBuild(data){
     return new Promise(function (resolve, reject) {
 
         debugger;
-        var url = 'http://18.219.63.233:5000/build/updateJenkins/' + build._id + "/";
+        var url = 'http://177.190.150.12:5000/build/updateJenkins/' + build._id + "/";
 
         $.ajax({
             url: url,
@@ -830,7 +830,7 @@ $('#updateVars').submit(function (event) {
     data.push({ name: "PASS_ADMIN", value: $('#id_pass_admin').val()});
     data.push({ name: "PASS_ODOO", value: $('#id_pass_odoo').val()});
 
-    var url = 'http://18.219.63.233:5000/vars/' + $("#idVars").val() + "/";
+    var url = 'http://177.190.150.12:5000/vars/' + $("#idVars").val() + "/";
 
     $.ajax({
         type: "PUT",

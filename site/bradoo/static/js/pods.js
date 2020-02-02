@@ -1,7 +1,7 @@
 $('form[id^="log-pod-"]').on('submit', function (event) {
     event.preventDefault();
     var data = $( this ).serializeJSON();
-    var url = 'http://18.219.63.233:5000/log/';
+    var url = 'http://177.190.150.12:5000/log/';
     debugger;
     $.ajax({
         url: url,

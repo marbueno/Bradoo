@@ -20,9 +20,9 @@ def deployments_views(request):
         headers = {'Content-type': 'application/text'}
         headers2 = {'Content-type': 'application/json'}
 
-        images = requests.get('http://18.219.63.233:5000/image/', headers=headers).json()
-        products = requests.get('http://18.219.63.233:5000/produto/', headers=headers).json()
-        builds = requests.get('http://18.219.63.233:5000/build/', headers=headers2).json()
+        images = requests.get('http://192.168.177.232:5000/image/', headers=headers).json()
+        products = requests.get('http://192.168.177.232:5000/produto/', headers=headers).json()
+        builds = requests.get('http://192.168.177.232:5000/build/', headers=headers2).json()
 
         # form createjob
         formJob = JobForm()
@@ -45,21 +45,44 @@ def deployments_views(request):
 
 
 def images_views(request):
-    form = ImageForm()
-    formUpdate = ImageFormUpdate
-    headers = {'Content-Type': 'application/json'}
 
-    images = requests.get('http://18.219.63.233:5000/image/', headers=headers).json()
-    products = requests.get('http://18.219.63.233:5000/produto/', headers=headers).json()
+    try:
+        print('passo 1')
 
-    context = {
-        'form': form,
-        'images': refactor_id(images),
-        'formupdate': formUpdate,
-        'products': refactor_id(products)
+        form = ImageForm()
 
-    }
-    return render(request, 'images/index.html', context)
+        print('passo 2')
+
+        formUpdate = ImageFormUpdate
+
+        print('passo 3')
+
+        headers = {'Content-Type': 'application/json'}
+
+        print('passo 4')
+
+        images = requests.get('http://192.168.177.232:5000/image/', headers=headers).json()
+
+        print('passo 5')
+
+        products = requests.get('http://192.168.177.232:5000/produto/', headers=headers).json()
+
+        print('passo 6')
+
+        context = {
+            'form': form,
+            'images': refactor_id(images),
+            'formupdate': formUpdate,
+            'products': refactor_id(products)
+
+        }
+
+        print('passo 7')
+
+        return render(request, 'images/index.html', context)
+
+    except Exception as ex:
+        print (ex)        
 
 
 def list_pods(request):
@@ -76,7 +99,7 @@ def list_pods(request):
 
 def products_views(request):
     headers = {'Content-Type': 'application/json'}
-    products = requests.get('http://18.219.63.233:5000/produto/', headers=headers).json()
+    products = requests.get('http://192.168.177.232:5000/produto/', headers=headers).json()
 
     context = {
         'formproduct': ProductForm,
@@ -86,7 +109,7 @@ def products_views(request):
 
 def bulk_update_views(request):
 
-    products = requests.get('http://18.219.63.233:5000/produto/', headers={'Content-type': 'application/text'}).json()
+    products = requests.get('http://192.168.177.232:5000/produto/', headers={'Content-type': 'application/text'}).json()
 
     context = {
         'products': refactor_id(products)

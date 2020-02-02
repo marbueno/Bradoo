@@ -2,14 +2,14 @@ $('#registry-product').submit(function (event) {
     event.preventDefault(); //prevent default action
     var data = $( this ).serializeArray();
     debugger;
-    var url = "http://18.219.63.233:5000/produto/";
+    var url = "http://177.190.150.12:5000/produto/";
     var typeStr = "POST";
     var productId = $("#produtoId").val();
     var msg = "Produto Cadastrado!"
     var msgLog = "Criação do Produto: " + $('#id_product').val();
 
     if (productId !== "" && productId !== null){
-        url = "http://18.219.63.233:5000/produto/" + productId + "/";
+        url = "http://177.190.150.12:5000/produto/" + productId + "/";
         typeStr = "PUT";
         msg = "Produto Alterado!";
         msgLog = "";
@@ -66,7 +66,7 @@ $('form[id^="rm-product-"]').submit(function (event) {
     }).then((result) => {
           if (result.value) {
                 $.ajax({
-                        url: "http://18.219.63.233:5000/produto/" + data[0]['value'] + "/",
+                        url: "http://177.190.150.12:5000/produto/" + data[0]['value'] + "/",
                         type: "DELETE",
                         data: data,
                         dataType: "json",
