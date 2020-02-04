@@ -9,7 +9,7 @@ from modulos.worker import *
 
 config.load_kube_config()
 def connect_jenkins():
-    con = Jenkins('http://192.168.177.232:8080/', username='rtk', password='1133bb81270b30791d60122c81cd85c449')
+    con = Jenkins('http://192.168.177.232:8080/', username='rtk', password='rtk')
     return con
 
 def desconnect_jenkins(con):

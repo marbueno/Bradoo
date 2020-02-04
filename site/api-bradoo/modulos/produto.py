@@ -13,7 +13,7 @@ db = con['bradoo']
 produto = Blueprint('produto', __name__, url_prefix='/produto/')
 
 def connect_jenkins():
-    con = Jenkins('http://18.219.63.233:8080/', username='vitorlavor', password='1149e0e4346bb060c9b277d6294080fdc4')
+    con = Jenkins('http://192.168.177.232:8080/', username='rtk', password='rtk')
     return con
 
 @produto.route('', methods=["POST"])
