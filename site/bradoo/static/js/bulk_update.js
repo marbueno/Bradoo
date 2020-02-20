@@ -19,7 +19,7 @@ function carregarDeployments() {
                 "lengthMenu": [[20, -1], [20, "All"]],
                 "ajax": {
                     "type": "GET",
-                    "url": 'http://177.190.150.12:5000/build/getBuilds/',
+                    "url": 'http://' + ipServer + ':5000/build/getBuilds/',
                     "dataSrc": ""
                 },
                 "columns": [
@@ -194,7 +194,7 @@ function setValuesFields(name){
 
     $.ajax({
         type: "GET",
-        url: "http://177.190.150.12:5000/build/" + name + '/',
+        url: "http://" + ipServer + ":5000/build/" + name + '/',
         datatype: "json",
         success: function (result) {
 
@@ -205,7 +205,7 @@ function setValuesFields(name){
     
             $.ajax({
                 type: "GET",
-                url: "http://177.190.150.12:5000/image/",
+                url: "http://' + ipServer + ':5000/image/",
                 datatype: "json",
                 success: function (resultImage) {
                     images = resultImage;
@@ -261,7 +261,7 @@ $('#updatebuild').submit(function (event) {
         updateJenkins(build.name, data).then( r => {
             if (r === true){
 
-                var url = 'http://177.190.150.12:5000/build/updateImageTagAux/' + build._id + '/' + image_tag_aux;
+                var url = 'http://' + ipServer + ':5000/build/updateImageTagAux/' + build._id + '/' + image_tag_aux;
 
                 $.ajax({
                     type: "PUT",
@@ -306,7 +306,7 @@ $('#updatebuild').submit(function (event) {
 function updateStatus(jobName, status) {
     
     return new Promise(function (resolve, reject) {
-        var url = 'http://177.190.150.12:5000/build/updateStatus/' + jobName + '/' + status + '/';
+        var url = 'http://' + ipServer + ':5000/build/updateStatus/' + jobName + '/' + status + '/';
         
         $.ajax({
             url: url,
@@ -348,7 +348,7 @@ function updateJenkins(jobName, data) {
 function updateStatus(jobName, status) {
     
     return new Promise(function (resolve, reject) {
-        var url = 'http://177.190.150.12:5000/build/updateStatus/' + jobName + '/' + status + '/';
+        var url = 'http://' + ipServer + ':5000/build/updateStatus/' + jobName + '/' + status + '/';
         
         $.ajax({
             url: url,
@@ -370,7 +370,7 @@ function checkBuild(item){
     return new Promise(function (resolve, reject) {
 
         debugger;
-        var url = 'http://177.190.150.12:5000/build/checkBuild/' + item.instanceName + '/';
+        var url = 'http://' + ipServer + ':5000/build/checkBuild/' + item.instanceName + '/';
 
         $.ajax({
             url: url,
@@ -394,7 +394,7 @@ function checkBuild(item){
 
                             if (item.status === "3"){
                                 
-                                var url = 'http://177.190.150.12:5000/build/' + item.id + "/";
+                                var url = 'http://' + ipServer + ':5000/build/' + item.id + "/";
                                 var msgLog = "Atualização da Instância: " + item.instanceName;
 
                                 $.ajax({
@@ -446,7 +446,7 @@ function doUpdateBuild(data){
     return new Promise(function (resolve, reject) {
 
         debugger;
-        var url = 'http://177.190.150.12:5000/build/updateJenkins/' + build._id + "/";
+        var url = 'http://' + ipServer + ':5000/build/updateJenkins/' + build._id + "/";
 
         $.ajax({
             url: url,

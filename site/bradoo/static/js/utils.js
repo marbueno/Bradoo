@@ -1,3 +1,6 @@
+var ipServer = '192.168.177.232';
+
+
 $.fn.serializeObject = function () {
   var o = {};
   var a = this.serializeArray();

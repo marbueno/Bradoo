@@ -29,7 +29,7 @@ $('#registry-images').submit(function (event) {
 
         if (r === true) {
 
-            var url = "http://177.190.150.12:5000/image/";
+            var url = "http://" + ipServer + ":5000/image/";
             var typeStr = "POST";
             var imageId = $("#imageId").val();
             var msg = "Imagem Cadastrada!"
@@ -47,7 +47,7 @@ $('#registry-images').submit(function (event) {
                 if (id_mod_bd_prd.includes("Nenhum")) id_mod_bd_prd = ""
                 if (id_mod_bd_demo.includes("Nenhum")) id_mod_bd_demo = ""
 
-                url = "http://177.190.150.12:5000/image/" + imageId + "/";
+                url = "http://' + ipServer + ':5000/image/" + imageId + "/";
                 typeStr = "PUT";
                 msg = "Imagem Alterada!";
             }
@@ -138,7 +138,7 @@ function uploadFiles(fileNames) {
                 formData.append(fileNames[1], fileInputDEMO.get(0).files[0]);
 
             return jQuery.ajax({
-                url: "http://177.190.150.12:5000/image/uploadFile",
+                url: "http://" + ipServer + ":5000/image/uploadFile",
                 type: "POST",
                 data: formData,
                 async: true,
@@ -180,7 +180,7 @@ $('form[id^="rm-image-"]').submit(function (event) {
     }).then((result) => {
           if (result.value) {
              $.ajax({
-                    url: "http://177.190.150.12:5000/image/"+ data[0]['value'] + "/",
+                    url: "http://" + ipServer + ":5000/image/"+ data[0]['value'] + "/",
                     type: "DELETE",
                     data: data,
                     dataType: "json",
@@ -226,7 +226,7 @@ $("#auto_fill_image").focusout(function () {
     var image = $( this ).val();
     $.ajax({
         type: "GET",
-        url: "http://177.190.150.12:5000/image/" + image + "/",
+        url: "http://" + ipServer + ":5000/image/" + image + "/",
         datatype: "json",
         success: function (result) {
             $("#id_image_nameu").val(result.image_name);
@@ -240,7 +240,7 @@ $('#update-images').submit(function (event) {
     event.preventDefault(); //prevent default action
     var data = $( this ).serializeArray();
     debugger;
-    var url = 'http://177.190.150.12:5000/image/'+ data[1]['value'] + '/';
+    var url = 'http://' + ipServer + ':5000/image/'+ data[1]['value'] + '/';
     $.ajax({
         type: "PUT",
         url: url,

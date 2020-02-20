@@ -12,7 +12,7 @@ function carregarLogs() {
             "lengthMenu": [[20, -1], [20, "All"]],
             "ajax": {
                 "type": "GET",
-                "url": 'http://177.190.150.12:5000/log/',
+                "url": 'http://' + ipServer + ':5000/log/',
                 "dataSrc": ""
             },
             "columns": [
@@ -64,7 +64,7 @@ function addLog(action, instanceName, cnpj, produto, image_tag_origem, image_tag
 
     $.ajax({
         type: "POST",
-        url: "http://177.190.150.12:5000/log/",
+        url: "http://" + ipServer + ":5000/log/",
         data :  JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
